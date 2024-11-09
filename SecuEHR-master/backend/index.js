@@ -104,7 +104,7 @@ app.post('/patients', async (req, res) => {
 
 app.get('/patients', async (req, res) => {
   try {
-    const patients = await PatientModel.find();
+    const patients = await PatientModel.find();//find only ones sith disease
     // Decrypt patient information before sending it to the client
     const decryptedPatients = patients.map(patient => ({
       _id: patient._id,
@@ -120,6 +120,41 @@ app.get('/patients', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+
+
+app.get('/myentries', async (req, res) => {
+  try {
+    const { patientemail } = req.query; // Get patientemail from query params
+    
+    // Find patients with matching first or last name (or both if you prefer)
+    const patients = await PatientModel.find({
+      $and: [
+        {
+          $or: [
+            { email: encrypt(patientemail) }
+          ]
+        },
+        { disease: encrypt('') } // Checks that 'disease' is not an empty string
+      ]
+    });   
+
+    // Decrypt patient information
+    const decryptedPatients = patients.map(patient => ({
+      _id: patient._id,
+      firstname: decrypt(patient.firstname),
+      lastname: decrypt(patient.lastname),
+      age: decrypt(patient.age),
+      regDate: decrypt(patient.regDate),
+      contact: decrypt(patient.contact),
+      disease: decrypt(patient.disease),
+    }));
+    
+    res.json(decryptedPatients);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 
 app.put('/patients/:id', async (req, res) => {
   const { id } = req.params;
@@ -169,10 +204,11 @@ app.delete('/patients/:id', async (req, res) => {
 });
 
 app.post('/appointments', async (req, res) => {
-  const { patientName, appointmentDate, appointmentTime, age, gender, contactNumber } = req.body;
+  const { patientName, patientemail,appointmentDate, appointmentTime, age, gender, contactNumber } = req.body;
   try {
     const encryptedAppointment = {
       patientName: encrypt(patientName),
+      patientemail: patientemail,
       appointmentDate: encrypt(appointmentDate),
       appointmentTime: encrypt(appointmentTime),
       age: encrypt(age.toString()), // Convert age to string before encryption
@@ -195,6 +231,7 @@ app.get('/appointments', async (req, res) => {
     const decryptedAppointments = appointments.map(appointment => ({
       _id: appointment._id,
       patientName: decrypt(appointment.patientName),
+      patientemail: appointment.patientemail,
       appointmentDate: decrypt(appointment.appointmentDate),
       appointmentTime: decrypt(appointment.appointmentTime),
       age: decrypt(appointment.age),
@@ -209,7 +246,7 @@ app.get('/appointments', async (req, res) => {
 
 app.put('/appointments/:id', async (req, res) => {
   const { id } = req.params;
-  const { status, patientName, appointmentDate, appointmentTime, age, gender, contactNumber } = req.body;
+  const { status, patientName, appointmentDate, appointmentTime, age, gender, contactNumber,patientemail } = req.body;
   try {
     // Retrieve the existing appointment information
     const existingAppointment = await AppointmentModel.findById(id);
@@ -217,11 +254,13 @@ app.put('/appointments/:id', async (req, res) => {
     // Decrypt the existing appointment information
     const decryptedAppointment = {
       patientName: decrypt(existingAppointment.patientName),
+      patientemail: patientemail,
       appointmentDate: decrypt(existingAppointment.appointmentDate),
       appointmentTime: decrypt(existingAppointment.appointmentTime),
       age: decrypt(existingAppointment.age),
       gender: decrypt(existingAppointment.gender),
       contactNumber: decrypt(existingAppointment.contactNumber),
+      status: status
     };
 
     // Update the appointment information
@@ -230,6 +269,7 @@ app.put('/appointments/:id', async (req, res) => {
       {
         status,
         patientName: encrypt(patientName || decryptedAppointment.patientName), // Use the existing value if not provided in the update
+        patientemail,
         appointmentDate: encrypt(appointmentDate || decryptedAppointment.appointmentDate),
         appointmentTime: encrypt(appointmentTime || decryptedAppointment.appointmentTime),
         age: encrypt(age.toString() || decryptedAppointment.age),
@@ -265,18 +305,28 @@ app.options('/login', (req, res) => {
 app.post('/login', loginLimiter, async (req, res) => {
   const { email, password, role } = req.body;
 
+  // Choose the correct model based on the role
+  let Model;
+  if (role === 'Doctor') {
+    Model = DoctorModel;
+  } else if (role === 'Patient') {
+    Model = PatientModel;
+  } else if (role === 'Admin') {
+    Model = FormDataModel;
+  } else {
+    return res.status(400).json('Invalid role');
+  }
   try {
-    const user = await FormDataModel.findOne({ email, role });
+    const user = await Model.findOne({ email });
 
     if (user) {
       const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
-      console.log("Hashed Password",hashedPassword);
-      console.log("User entered password from db:",user.password);
-      
+      // console.log("Hashed Password:", hashedPassword);
+      // console.log("User entered password from db:", user.password);
       if (hashedPassword === user.password) {
         res.json('Success');
       } else {
-        res.status(401).json('password not same');
+        res.status(401).json('Incorrect password');
       }
     } else {
       res.status(401).json('Invalid credentials');
@@ -296,26 +346,64 @@ app.options('/register', (req, res) => {
 
 app.post('/register', loginLimiter, async (req, res) => {
   const { name, email, password, role } = req.body;
-  const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+
+  // Check if user exists in the relevant collection based on role
+  let Model;
+  if (role === 'Doctor') {
+    Model = DoctorModel;
+  } else if (role === 'Patient') {
+    Model = PatientModel;
+  } else {
+    Model = FormDataModel;
+  }
+
   try {
-    const encryptedUser = {
-      name: name,
-      email:email,
-      password: hashedPassword,
-      role: role
+    const existingUser = await Model.findOne({ email });
+    if (existingUser) {
+      return res.status(401).send("Exists");
     }
-    let user = await FormDataModel.findOne({ email, role });
-    if(user){
-      //user already exists
-      res.status(401).json("Exists")
-    }else{
-      user = new FormDataModel(encryptedUser);
-      const newUser = await user.save();
-      res.status(201).json("success");
+
+    const hashedPassword = await crypto.createHash('sha256').update(password).digest('hex');
+
+    let newUser;
+    if (role === 'Doctor') {
+      const { specialization, location, contact } = req.body;
+      newUser = new DoctorModel({
+        name : encrypt(name),
+        email : email,
+        password: hashedPassword,
+        role : encrypt(role),
+        specialization : encrypt(specialization),
+        location : encrypt(location),
+        contact : encrypt(contact)
+      });
+    } else if (role === 'Patient') {
+      const { firstname, lastname, age, regDate, contact } = req.body;
+      newUser = new PatientModel({
+        name : encrypt(name),
+        email : email,
+        password: hashedPassword,
+        role : encrypt(role),
+        firstname : encrypt(firstname),
+        lastname : encrypt(lastname),
+        age : encrypt(age),
+        regDate : encrypt(regDate),
+        contact : encrypt(contact)
+      });
+    } else {
+      newUser = new FormDataModel({
+        name: encrypt(name),
+        email: email,
+        password: hashedPassword,
+        role: encrypt(role)
+      });
     }
-  } catch (err) {
-    console.error('Error:',err.message);
-    res.status(500).json('An error occurred');
+
+    await newUser.save();
+    res.status(201).send("success");
+  } catch (error) {
+    console.error('Error during registration:', error);
+    res.status(500).send("Error");
   }
 });
 
@@ -330,10 +418,9 @@ app.get('/api/users', async (req, res) => {
 });
 
 app.post('/doctors', async (req, res) => {
-  const { id, name, specialization, location, contact } = req.body;
+  const {name, specialization, location, contact } = req.body;
   try {
     const encryptedDoctor = {
-      id: encrypt(id),
       name: encrypt(name),
       specialization: encrypt(specialization),
       location: encrypt(location),
@@ -354,8 +441,6 @@ app.get('/doctors', async (req, res) => {
     const doctors = await DoctorModel.find();
     // Decrypt doctor information before sending it to the client
     const decryptedDoctors = doctors.map(doctor => ({
-      _id: doctor._id,
-      id: decrypt(doctor.id),
       name: decrypt(doctor.name),
       specialization: decrypt(doctor.specialization),
       location: decrypt(doctor.location),

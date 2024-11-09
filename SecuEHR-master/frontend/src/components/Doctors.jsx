@@ -123,9 +123,6 @@ const DoctorsPage = () => {
     }
   };
   
-  
-  
-
   const isAdmin = localStorage.getItem('role') === 'Admin';
 
   const canEditDelete = isAdmin ? true : false;

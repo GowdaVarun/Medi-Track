@@ -20,7 +20,7 @@ const Footer = () => {
     return (
         <div style={footerStyle}>
             <div style={contactStyle}>
-                Contact & Support: <a href="mailto:getHelp@secureehr.com" style={{ color: '#3498db' }}>getHelp@clininsync.com</a>, ©️SecuEHR
+                Contact & Support: <a href="mailto:getHelp@secureehr.com" style={{ color: '#3498db' }}>getHelp@Medi-Track.com</a>, ©️Medi-Track
             </div>
         </div>
     );

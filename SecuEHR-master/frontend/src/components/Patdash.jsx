@@ -34,7 +34,7 @@ const PatientDashboard = () => {
 
     return (
         <div style={backgroundStyle}>
-            <h1 style={{ color: '#fff', fontSize: '36px', marginBottom: '30px' }}>Welcome to CliniNSync Patient Dashboard !</h1>
+            <h1 style={{ color: '#fff', fontSize: '36px', marginBottom: '30px' }}>Welcome to Medi-Track Patient Dashboard !</h1>
             <div className="button-container">
                 {navigationButtons.map((button, index) => (
                     <Link key={index} to={button.link} className="btn" style={buttonStyle}>
@@ -43,7 +43,7 @@ const PatientDashboard = () => {
                 ))}
             </div>
             <Link to='/login' className="btn" style={{ color: 'white', textDecoration: 'none', backgroundColor: 'red', padding: '10px 20px', marginTop: '20px' }}>Logout</Link>
-            <p style={{ color: 'white', marginTop: '20px' }}>©️CliniNSync</p>
+            <p style={{ color: 'white', marginTop: '20px' }}>©️Medi-Track</p>
         </div>
     );
 };

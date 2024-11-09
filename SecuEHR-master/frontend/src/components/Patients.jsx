@@ -19,30 +19,39 @@ const PatientsPage = () => {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const result = await axios.get('http://localhost:3001/patients');
+        const role = localStorage.getItem('role');
+        const email = localStorage.getItem('email');
+        let result;
+  
+        if (role === 'Admin') {
+          result = await axios.get('http://localhost:3001/patients');
+        } else if (role === 'Patient') {
+          result = await axios.get('http://localhost:3001/myentries', {
+            params: { patientemail: email },
+          });
+        }
+        
         setPatients(result.data);
       } catch (error) {
         console.error('Error fetching patients:', error);
       }
     };
-
+  
     fetchPatients();
   }, []);
-
+  
   const handleAddPatient = async () => {
     try {
-      await axios.post('http://localhost:3001/patients', newPatient);
-      setNewPatient({
-        firstname: '',
-        lastname: '',
-        age: '',
-        regDate: '',
-        contact: '',
-        disease: '',
-      });
-      const result = await axios.get('http://localhost:3001/patients');
-      setPatients(result.data);
+      const role = localStorage.getItem('role');
+      if (role === 'Patient') {
+        const patientDetails = { ...newPatient, disease: newPatient.disease };
+        await axios.put(`http://localhost:3001/patients/${patientDetails._id}`, patientDetails);
+      } else {//admin
+        await axios.post('http://localhost:3001/patients', newPatient);
+      }
+  
       setShowAddPatientForm(false);
+      fetchPatients(); // Refresh the patients list
     } catch (error) {
       console.error('Error adding patient:', error);
     }
@@ -56,7 +65,9 @@ const PatientsPage = () => {
   const handleSave = async (id) => {
     console.log(`Saving patient with ID: ${id}`);
     setEditablePatientId(null);
-
+    const role = localStorage.getItem('role');
+    const name = localStorage.getItem('name');
+      
     // Find the patient to be edited in the local state
     const editedPatient = patients.find((patient) => patient._id === id);
 
@@ -65,7 +76,7 @@ const PatientsPage = () => {
       await axios.put(`http://localhost:3001/patients/${id}`, editedPatient);
 
       // Fetch the updated list of patients after editing
-      const result = await axios.get('http://localhost:3001/patients');
+      const result = await axios.get('http://localhost:3001/myentries');
       setPatients(result.data);
     } catch (error) {
       console.error('Error editing patient:', error);
@@ -74,12 +85,23 @@ const PatientsPage = () => {
 
   const handleDelete = async (id) => {
     console.log(`Deleting patient with ID: ${id}`);
-    try {
-      await axios.delete(`http://localhost:3001/patients/${id}`);
-      const result = await axios.get('http://localhost:3001/patients');
-      setPatients(result.data);
-    } catch (error) {
-      console.error('Error deleting patient:', error);
+      if(role=='Admin'){
+      try {
+        await axios.delete(`http://localhost:3001/patients/${id}`);
+        const result = await axios.get('http://localhost:3001/patients');
+        setPatients(result.data);
+      } catch (error) {
+        console.error('Error deleting patient:', error);
+      }
+    }else{
+      const patientDetails = { ...newPatient, disease: '' };  
+      try {
+        await axios.put(`http://localhost:3001/patients/${id}`,patientDetails);
+        const result = await axios.get('http://localhost:3001/myentries');
+        setPatients(result.data);
+      } catch (error) {
+        console.error('Error deleting disease:', error);
+      }
     }
   };
 
@@ -117,10 +139,12 @@ const PatientsPage = () => {
       >
         <button className="btn btn-primary">Dashboard</button>
       </Link>
+      {localStorage.getItem('role') !== 'Doctor'? (
       <h2 className="text-center mb-3" style={{ color: 'white' }}>
         Patient Records
-      </h2>
-
+      </h2>):(<h2></h2>)}
+      {localStorage.getItem('role') === 'Admin' ? (
+        // admin role
       <div
         className="mb-4 p-4"
         style={{
@@ -189,8 +213,80 @@ const PatientsPage = () => {
             Add Patient
           </button>
         )}
+      </div>) : localStorage.getItem('role') === 'Patient'
+            ? (
+        //patient role
+      <div
+      className="mb-4 p-4"
+      style={{
+        background: 'rgba(255, 255, 255, 0.2)',
+        borderRadius: '10px',
+        width: '80%',
+        overflowX: 'auto',
+      }}
+      >
+      <h3 style={{ color: 'white', marginBottom: '20px' }}>Add Patient</h3>
+      {showAddPatientForm && (
+        <div className="row">
+          <div className="col">
+            <input
+              type="text"
+              value={patients.firstname}
+              placeholder="First Name"
+              className="form-control mb-3"
+              readOnly
+            />
+            <input
+              type="text"
+              value={patients.lastname}
+              placeholder="Last Name"
+              className="form-control mb-3"
+              readOnly
+            />
+            <input
+              type="text"
+              value={patients.age}
+              placeholder="Age"
+              className="form-control mb-3"
+              readOnly
+            />
+          </div>
+          <div className="col">
+            <input
+              type="text"
+              value={patients.regDate}
+              placeholder="Reg. Date(DD/MM/YYYY)"
+              className="form-control mb-3"
+              readOnly
+            />
+            <input
+              type="text"
+              value={patients.contact}
+              placeholder="Contact"
+              className="form-control mb-3"
+              readOnly
+            />
+            <input
+              type="text"
+              value={newPatient.disease}
+              onChange={(e) => setNewPatient({ ...newPatient, disease: e.target.value })}
+              placeholder="Diagnosis"
+              className="form-control mb-3"
+            />
+          </div>
+        </div>
+      )}
+      <button onClick={() => setShowAddPatientForm((prev) => !prev)} className="btn btn-primary" style={{ width: '100%' }}>
+        {showAddPatientForm ? 'Cancel' : 'Add symptoms'}
+      </button>
+      {showAddPatientForm && (
+        <button onClick={handleAddPatient} className="btn btn-primary mt-3" style={{ width: '100%' }}>
+          Add symptoms
+        </button>
+      )}
       </div>
-
+      ):(<div></div>)
+      }
       <div
         className="mb-4 p-4"
         style={{

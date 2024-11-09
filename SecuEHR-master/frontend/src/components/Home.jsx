@@ -32,7 +32,7 @@ const Dashboard = () => {
     const navigationButtons = [
         { name: 'Patients', link: '/patients' },
         { name: 'Doctors/Practitioners', link: '/doctors' },
-        { name: 'Medical Records', link: '/healthrecords' },
+        // { name: 'Medical Records', link: '/healthrecords' },
         { name: 'User Management', link: '/medicaldocuments' },
         { name: 'Appointments', link: '/appointments' },
     ];
@@ -52,7 +52,7 @@ const Dashboard = () => {
 
     return (
         <div style={backgroundStyle}>
-            <h1 style={{ color: '#fff', fontSize: '36px', marginBottom: '30px' }}>Welcome to CliniNSync Admin Dashboard !</h1>
+            <h1 style={{ color: '#fff', fontSize: '36px', marginBottom: '30px' }}>Welcome to Medi-Track Admin Dashboard !</h1>
             <div className="button-container">
                 {navigationButtons.map((button, index) => (
                     <Link key={index} to={button.link} className="btn" style={buttonStyle}>
@@ -61,7 +61,7 @@ const Dashboard = () => {
                 ))}
             </div>
             <Link to='/login' className="btn" style={{ color: 'white', textDecoration: 'none', backgroundColor: 'red', padding: '10px 20px', marginTop: '20px' }}>Logout</Link>
-            <p style={{ color: 'white', marginTop: '20px' }}>©️CliniNSync</p>
+            <p style={{ color: 'white', marginTop: '20px' }}>©️Medi-Track</p>
         </div>
     );
 };

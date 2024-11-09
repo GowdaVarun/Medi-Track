@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-
+const patientemail=localStorage.getItem('email');
 const AppointmentBooking = () => {
 
   const [formData, setFormData] = useState({
@@ -13,7 +13,6 @@ const AppointmentBooking = () => {
     contactNumber: '',
   });
 
-  const [, setDoctors] = useState([]);
   const [appointments, setAppointments] = useState([]);
   const navigate = useNavigate();
 
@@ -41,7 +40,7 @@ const AppointmentBooking = () => {
   const handleAppointmentBooking = async (e) => {
     e.preventDefault();
     try {
-      const newAppointment = { ...formData, status: 'scheduled' };
+      const newAppointment = { ...formData, patientemail };
       const response = await axios.post('http://localhost:3001/appointments', newAppointment, {
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +101,7 @@ const handleStatusChange = async (appointmentId, newStatus) => {
       }
   
       // Send PUT request to update appointment status
-      await axios.put(`http://localhost:3001/appointments/${appointmentId}`, { status: newStatus });
+      await axios.put(`http://localhost:3001/appointments/${appointmentId}`, {...formData,patientemail, status: newStatus });
   
       console.log(`Appointment status changed to ${newStatus}`);
   
@@ -140,13 +139,12 @@ const handleDashboardClick = () => {
     }
   };
 
-  const role = localStorage.getItem('role');
-  const patientName = localStorage.getItem('patientName');
+  let role = localStorage.getItem('role');
+  const email = localStorage.getItem('email');
   const headingText = role === 'Patient' ? 'Appointments' : role === 'Admin' ? 'Appointment Records' : 'Manage Appointments';
-  const patientContactNumber = localStorage.getItem('patientContactNumber'); // Assuming you have a patient contact number in your storage
-
+  
   const patientUpcomingAppointments = appointments.filter(
-    (appointment) => appointment.patientName === patientName && new Date(appointment.appointmentDate) >= new Date()
+    (appointment) => appointment.patientemail === email && new Date(appointment.appointmentDate) >= new Date()
   );
 
   //showing appointments for doctors
@@ -154,14 +152,14 @@ const handleDashboardClick = () => {
 
   let userAppointments;
   if (role === 'Patient') {
-    userAppointments = patientUpcomingAppointments.filter(appointment => appointment.contactNumber === patientContactNumber);
+    userAppointments = patientUpcomingAppointments;
   } else {
     userAppointments = upcomingAppointments;
   }
-
+  role = localStorage.getItem('role');
   return (
     <div style={{ background: 'linear-gradient(to right, #232526, #414345)', color: '#ffffff', padding: '20px', height: '100vh', overflowY: 'scroll' }}>
-      <RouterLink to={role === 'Admin' ? '/home' : role === 'Patient' ? '/patdash' : '/docdash'}>
+      <RouterLink to={role == 'Admin' ? '/home' : role == 'Patient' ? '/patdash' : '/docdash'}>
         <button
           style={{
             backgroundColor: '#1e1e1e',
@@ -181,8 +179,8 @@ const handleDashboardClick = () => {
           Dashboard
         </button>
       </RouterLink>
-      <h1 style={{ textAlign: 'center', margin: '5px 0 0', color: 'white' }}>{headingText}</h1>
-      {role !== 'Patient' && role !== 'Admin' && (
+      {role != 'Admin' && role!='Doctor' && (
+      <><h1 style={{ textAlign: 'center', margin: '5px 0 0', color: 'white' }}>{headingText}</h1>
       <div className="mb-4 p-4" style={{ background: 'rgba(255, 255, 255, 0.2)', borderRadius: '10px', width: '60%', marginLeft: 'auto', marginRight: 'auto', marginTop: '20px' }}>
         <h3 style={{ color: 'white', marginBottom: '10px', marginTop: '10px' }}>{role === 'Patient' ? ' New Appointment Details' : ' New Appointment Details'}</h3>
         <form onSubmit={handleAppointmentBooking}>
@@ -247,13 +245,13 @@ const handleDashboardClick = () => {
             </div>
           </div>
           <button type="submit" className="btn btn-primary" style={{ width: '100%', borderRadius: '10px' }}>
-            {role === 'Patient' ? 'Book Appointment' : 'Add Appointment'}
+            {role == 'Patient' ? 'Book Appointment' : 'Add Appointment'}
           </button>
         </form>
       </div>
+      </>
       )}
-
-{role === 'Doctor' && (
+{role == 'Doctor' && (
   <div style={{ marginTop: '20px' }}>
     <h2 style={{ textAlign: 'center', color: 'white' }}>Registered Appointments</h2>
     <table className="table table-striped" style={{ color: 'white' }}>
@@ -278,14 +276,34 @@ const handleDashboardClick = () => {
             <td>{appointment.gender}</td>
             <td>{appointment.contactNumber}</td>
             <td>
-              {appointment.status === 'scheduled' && (
+              {appointment.status == 'scheduled' && (
                 <>
-                  <button className="btn btn-success btn-sm mr-2" onClick={() => handleStatusChange(appointment._id, 'confirmed')}>Confirm</button>
-                  <button className="btn btn-danger btn-sm mr-2" onClick={() => handleStatusChange(appointment._id, 'canceled')}>Cancel</button>
-                  <button className="btn btn-secondary btn-sm mr-2" onClick={() => handleStatusChange(appointment._id, 'completed')}>Complete</button>
+                  <button
+                    className="btn btn-success btn-sm mr-2"
+                    onClick={() => handleStatusChange(appointment._id, 'confirmed')}
+                  >
+                    Confirm
+                  </button>
+                  <button
+                    className="btn btn-danger btn-sm mr-2"
+                    onClick={() => handleStatusChange(appointment._id, 'canceled')}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="btn btn-secondary btn-sm mr-2"
+                    onClick={() => handleStatusChange(appointment._id, 'completed')}
+                  >
+                    Complete
+                  </button>
                 </>
               )}
-              <button className="btn btn-warning btn-sm" onClick={() => handleDeleteAppointment(appointment._id)}>Delete</button>
+              <button
+                className="btn btn-warning btn-sm"
+                onClick={() => handleDeleteAppointment(appointment._id)}
+              >
+                Delete
+              </button>
             </td>
           </tr>
         ))}
@@ -293,10 +311,7 @@ const handleDashboardClick = () => {
     </table>
   </div>
 )}
-
-
-
-{role === 'Admin' && (
+{role == 'Admin' && (
   <div style={{ marginTop: '20px' }}>
     <table className="table table-striped" style={{ color: 'white' }}>
       <thead>
@@ -320,7 +335,7 @@ const handleDashboardClick = () => {
             <td>{appointment.gender}</td>
             <td>{appointment.contactNumber}</td>
             <td>
-              {appointment.status === 'scheduled' && (
+              {appointment.status == 'scheduled' && (
                 <>
                   <button className="btn btn-success btn-sm mr-2" onClick={() => handleStatusChange(appointment._id, 'confirmed')}>Confirm</button>
                   <button className="btn btn-danger btn-sm mr-2" onClick={() => handleStatusChange(appointment._id, 'canceled')}>Cancel</button>
@@ -337,16 +352,17 @@ const handleDashboardClick = () => {
 )}
 
       {/* For Patients: Appointments */}
-      {role === 'Patient' && (
+      {role == 'Patient' && (
         <div style={{ marginTop: '20px' }}>
           {/* Upcoming Appointments */}
           
           <table className="table table-striped" style={{ color: 'white' }}>
             <thead>
               <tr>
-                <th>Doctor Name</th>
+                {/* <th>Doctor Name</th> */}
                 <th>Appointment Date</th>
                 <th>Appointment Time</th>
+                <th>Status</th>
                 {/* Add more columns as needed */}
               </tr>
             </thead>
@@ -354,9 +370,10 @@ const handleDashboardClick = () => {
               {userAppointments.map((appointment) => (
                 <tr key={appointment._id}>
                   {/* Display relevant appointment information for patients */}
-                  <td>{appointment.doctorName}</td>
+                  {/* <td>{appointment.doctorName}</td> */}
                   <td>{appointment.appointmentDate}</td>
                   <td>{appointment.appointmentTime}</td>
+                  <td>{appointment.status}</td>
                 </tr>
               ))}
             </tbody>

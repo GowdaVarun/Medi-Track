@@ -25,6 +25,7 @@ const Login = () => {
           console.log('Login Success');
           console.log(role);
           localStorage.setItem('role', role); // Store the role in local storage
+          localStorage.setItem('email', email); // Store the role in local storage
           if (role === 'Admin') {
             navigate('/home');
           } else if (role === 'Patient') {
@@ -55,7 +56,7 @@ const Login = () => {
   return (
     <div className="login-background">
       <div className="bg-white p-3 rounded" style={{ width: '40%' }}>
-        <h2 className="mb-3 text-primary">SecuEHR Login</h2>
+        <h2 className="mb-3 text-primary">Medi-Track Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3 text-start">
             <label htmlFor="exampleInputEmail1" className="form-label">
@@ -117,7 +118,7 @@ const Login = () => {
             </div>
           </div>
         )}
-        <p className="container my-2">©️SecuEHR</p>
+        <p className="container my-2">©️Medi-Track</p>
         <Link to='/register' className="btn btn-secondary">Register</Link>
       </div>
     </div>
