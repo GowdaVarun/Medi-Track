@@ -409,8 +409,30 @@ app.post('/register', loginLimiter, async (req, res) => {
 
 app.get('/api/users', async (req, res) => {
   try {
+    const doctors = await DoctorModel.find();
+    const decryptedDoctors = doctors.map(doctor => ({
+      name: decrypt(doctor.name),
+      role: 'Doctor',
+      email: doctor.email
+    }));
     const users = await FormDataModel.find();
-    res.json(users);
+    const decryptedUsers = users.map(user => ({
+      name: decrypt(user.name),
+      email: user.email,
+      role: 'Admin'
+    }));
+    const patients = await PatientModel.find();
+    const decryptedPatients = patients.map(patient=>({
+      name: decrypt(patient.name),
+      email: patient.email,
+      role: 'Patient',
+    }));
+    const decryptedData = [
+      ...decryptedDoctors,
+      ...decryptedUsers,
+      ...decryptedPatients
+    ];
+    res.json(decryptedData);
   } catch (error) {
     console.error('Error fetching users:', error);
     res.status(500).json({ message: 'Internal Server Error' });

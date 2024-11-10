@@ -16,7 +16,9 @@ const PatientDashboard = () => {
     const navigationButtons = [
         { name: 'My Medical Records', link: '/healthrecords' },
         { name: 'Appointments', link: '/appointments' },
+        {name: 'My entries',link: '/patients'},
         { name: 'Find Doctors', link: '/doctors' },
+
     ];
 
     const buttonStyle = {

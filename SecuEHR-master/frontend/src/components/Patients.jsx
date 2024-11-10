@@ -22,7 +22,6 @@ const PatientsPage = () => {
         const role = localStorage.getItem('role');
         const email = localStorage.getItem('email');
         let result;
-  
         if (role === 'Admin') {
           result = await axios.get('http://localhost:3001/patients');
         } else if (role === 'Patient') {
@@ -30,7 +29,6 @@ const PatientsPage = () => {
             params: { patientemail: email },
           });
         }
-        
         setPatients(result.data);
       } catch (error) {
         console.error('Error fetching patients:', error);
@@ -225,7 +223,7 @@ const PatientsPage = () => {
         overflowX: 'auto',
       }}
       >
-      <h3 style={{ color: 'white', marginBottom: '20px' }}>Add Patient</h3>
+      <h3 style={{ color: 'white', marginBottom: '20px' }}>Add Symptom</h3>
       {showAddPatientForm && (
         <div className="row">
           <div className="col">
