@@ -9,6 +9,7 @@ const medicalRecordSchema = new mongoose.Schema({
   attendingDoctor: String,
   labResults: String,
   followUpDate: String,
+  contact: String,
 });
 
 const MedicalRecordModel = mongoose.model('medicalrecords', medicalRecordSchema);

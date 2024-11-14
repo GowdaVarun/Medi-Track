@@ -519,6 +519,7 @@ app.post('/medical-records', async (req, res) => {
     attendingDoctor,
     labResults,
     followUpDate,
+    contact,
   } = req.body;
   try {
     const encryptedRecord = {
@@ -530,6 +531,7 @@ app.post('/medical-records', async (req, res) => {
       attendingDoctor: encrypt(attendingDoctor),
       labResults: encrypt(labResults),
       followUpDate: encrypt(followUpDate),
+      contact: encrypt(contact),
     };
 
     const medicalRecord = new MedicalRecordModel(encryptedRecord);
@@ -553,6 +555,7 @@ app.get('/medical-records', async (req, res) => {
       attendingDoctor: decrypt(record.attendingDoctor),
       labResults: decrypt(record.labResults),
       followUpDate: decrypt(record.followUpDate),
+      contact: decrypt(record.contact),
     }));
     res.json(decryptedRecords);
   } catch (err) {
@@ -571,6 +574,7 @@ app.put('/medical-records/:id', async (req, res) => {
     attendingDoctor,
     labResults,
     followUpDate,
+    contact,
   } = req.body;
   try {
     const existingRecord = await MedicalRecordModel.findById(id);
@@ -583,6 +587,7 @@ app.put('/medical-records/:id', async (req, res) => {
       attendingDoctor: decrypt(existingRecord.attendingDoctor),
       labResults: decrypt(existingRecord.labResults),
       followUpDate: decrypt(existingRecord.followUpDate),
+      contact: decrypt(existingRecord.contact),
     };
 
     const updatedRecord = await MedicalRecordModel.findByIdAndUpdate(
@@ -596,6 +601,7 @@ app.put('/medical-records/:id', async (req, res) => {
         attendingDoctor: encrypt(attendingDoctor || decryptedRecord.attendingDoctor),
         labResults: encrypt(labResults || decryptedRecord.labResults),
         followUpDate: encrypt(followUpDate || decryptedRecord.followUpDate),
+        contact: encrypt(contact || decryptedRecord.contact),
       },
       { new: true }
     );
