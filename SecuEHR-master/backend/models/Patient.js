@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const patientSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
   },
   email: {
     type: String,
@@ -35,6 +34,7 @@ const patientSchema = new mongoose.Schema({
   },
   disease:{
     type: String,
+    default: "",
     required: false
   },
   contact: {

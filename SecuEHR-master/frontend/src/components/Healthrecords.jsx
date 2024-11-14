@@ -7,7 +7,7 @@ import './HealthRecords.css'; // Import a CSS file for styling
 const MedicalRecords = () => {
   const [records, setRecords] = useState([]);
   const [formData, setFormData] = useState({
-    patientId: '',
+    contact: '',
     diagnosis: '',
     treatmentPlan: '',
     medications: '',
@@ -63,7 +63,7 @@ const MedicalRecords = () => {
       setIsEditMode(false);
       setSelectedRecord(null);
       setFormData({
-        patientId: '',
+        contact: '',
         diagnosis: '',
         treatmentPlan: '',
         medications: '',
@@ -79,7 +79,7 @@ const MedicalRecords = () => {
 
   const handleEditRecord = (selectedRecord) => {
     setFormData({
-      patientId: selectedRecord.patientId,
+      contact: selectedRecord.contact,
       diagnosis: selectedRecord.diagnosis,
       treatmentPlan: selectedRecord.treatmentPlan,
       medications: selectedRecord.medications,
@@ -133,11 +133,11 @@ const MedicalRecords = () => {
           <h2>{isEditMode ? 'Edit Medical Record' : 'Add New Medical Record'}</h2>
           <form>
             <div className="form-group">
-              <label>Patient ID:</label>
+              <label>Patient Contact-Number:</label>
               <input
                 type="text"
-                value={formData.patientId}
-                onChange={(e) => handleFormFieldChange('patientId', e.target.value)}
+                value={formData.contact}
+                onChange={(e) => handleFormFieldChange('contact', e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -206,7 +206,7 @@ const MedicalRecords = () => {
       <table className="table">
         <thead>
           <tr>
-            <th>{localStorage.getItem('role') === 'Patient' ? 'Your ID' : 'Patient ID'}</th>
+            <th>{localStorage.getItem('role') === 'Patient' ? 'Your Name' : 'Patient Name'}</th>
             <th>Diagnosis</th>
             <th>Treatment Plan</th>
             <th>Medications</th>
@@ -214,13 +214,13 @@ const MedicalRecords = () => {
             <th>Attending Doctor</th>
             <th>Lab Results</th>
             <th>Follow-up Date</th>
-            {localStorage.getItem('role') !== 'Patient' && <th>Actions</th>}
+            <th>{localStorage.getItem('role') !== 'Patient' && 'Actions'}</th>
           </tr>
         </thead>
         <tbody>
           {records.map((record) => (
             <tr key={record._id}>
-              <td>{record.patientId}</td>
+              <td>{record.name}</td>
               <td>{record.diagnosis}</td>
               <td>{record.treatmentPlan}</td>
               <td>{record.medications}</td>

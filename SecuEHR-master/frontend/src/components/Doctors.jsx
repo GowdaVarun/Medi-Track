@@ -73,7 +73,6 @@ const DoctorsPage = () => {
       setIsEditMode(false);
       setSelectedDoctor(null);
       setFormData({
-        id: '',
         name: '',
         specialization: '',
         location: '',
@@ -95,7 +94,6 @@ const DoctorsPage = () => {
   const handleEditDoctor = (selectedDoctor) => {
     // Set the form data and update state for edit mode
     setFormData({
-      id: selectedDoctor.id,
       name: selectedDoctor.name,
       specialization: selectedDoctor.specialization,
       location: selectedDoctor.location,
@@ -171,15 +169,6 @@ const DoctorsPage = () => {
             <form>
               <div className="row mb-3">
                 <div className="col">
-                  <label>ID:</label>
-                  <input
-                    type="text"
-                    value={formData.id}
-                    onChange={(e) => handleFormFieldChange('id', e.target.value)}
-                    className="form-control"
-                  />
-                </div>
-                <div className="col">
                   <label>Name:</label>
                   <input
                     type="text"
@@ -247,9 +236,6 @@ const DoctorsPage = () => {
         <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #ffffff' }}>
           <thead>
             <tr>
-              <th onClick={() => handleSort('id')} style={{ backgroundColor: '#1e1e1e', cursor: 'pointer', padding: '10px' }}>
-                ID
-              </th>
               <th onClick={() => handleSort('name')} style={{ backgroundColor: '#1e1e1e', cursor: 'pointer', padding: '10px' }}>
                 Name
               </th>
@@ -268,7 +254,6 @@ const DoctorsPage = () => {
           <tbody>
             {filteredDoctors.map((doctor, index) => (
               <tr key={index} style={index % 2 === 0 ? { backgroundColor: '#333333' } : { backgroundColor: '#2e2e2e' }}>
-                <td style={{ padding: '10px' }}>{doctor.id}</td>
                 <td style={{ padding: '10px' }}>{doctor.name}</td>
                 <td style={{ padding: '10px' }}>{doctor.specialization}</td>
                 <td style={{ padding: '10px' }}>{doctor.location}</td>

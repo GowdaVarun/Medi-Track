@@ -115,7 +115,7 @@ const UserList = () => {
         </thead>
         <tbody>
           {filteredUsers.map((user) => (
-            <tr key={user._id} style={tdHoverStyle}>
+            <tr key={user.email} style={tdHoverStyle}>
               <td style={{ ...tdStyle, ...hoverEffect }}>{user.name}</td>
               <td style={{ ...tdStyle, ...hoverEffect }}>{user.email}</td>
               <td style={{ ...tdStyle, ...hoverEffect }}>{user.role}</td>
