@@ -1,21 +1,39 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
+import backgroundImage from '../../assets/background.jpg';
 
-const DoctorDashboard = () => {
-    const backgroundStyle = {
-        background: 'linear-gradient(135deg, #16222A, #3A6073)',
-        minHeight: '105vh',
+const Dashboard = () => {
+    const [backgroundStyle, setBackgroundStyle] = useState({
+        background: `url(${backgroundImage}) no-repeat center center fixed`,
+        backgroundSize: 'cover',
+        minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '50px',
-    };
+    });
+
+    useEffect(() => {
+        const newBackgroundStyle = {
+            background: `url(${backgroundImage}) no-repeat center center fixed`,
+            backgroundSize: 'cover',
+            minHeight: '105vh',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '50px',
+        };
+        setBackgroundStyle(newBackgroundStyle);
+    }, []);
 
     const navigationButtons = [
         { name: 'Patients', link: '/patients' },
-        { name: 'Medical Records', link: '/healthrecords' },
+        { name: 'Doctors/Practitioners', link: '/doctors' },
+        // { name: 'Medical Records', link: '/healthrecords' },
+        { name: 'User Management', link: '/medicaldocuments' },
         { name: 'Appointments', link: '/appointments' },
     ];
 
@@ -34,7 +52,7 @@ const DoctorDashboard = () => {
 
     return (
         <div style={backgroundStyle}>
-            <h1 style={{ color: '#fff', fontSize: '36px', marginBottom: '30px' }}>Welcome to Medi-Track Doctor Dashboard !</h1>
+            <h1 style={{ color: '#fff', fontSize: '36px', marginBottom: '30px' }}>Welcome to Medi-Track Admin Dashboard !</h1>
             <div className="button-container">
                 {navigationButtons.map((button, index) => (
                     <Link key={index} to={button.link} className="btn" style={buttonStyle}>
@@ -48,4 +66,4 @@ const DoctorDashboard = () => {
     );
 };
 
-export default DoctorDashboard;
+export default Dashboard;

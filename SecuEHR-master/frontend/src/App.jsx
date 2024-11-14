@@ -1,14 +1,15 @@
-import Home from './Home';
-import Login from './Login';
-import PatientsPage from './Patients';
-import Register from './Register';
+import Home from './components/Home/Home';
+import Login from './components/Login/Login';
+import PatientsPage from './components/Patients/Patients';
+import Register from './components/Register/Register';
 import {BrowserRouter, Routes, Route} from "react-router-dom";
-import DoctorsPage from './Doctors';
-import DoctorDashboard from './docDash';
-import PatientDashboard from './Patdash';
-import HealthRecordPage from './Healthrecords';
-import AppointmentBooking from './Appointments';
-import MedicalDocuments from './MedicalDocuments';
+import DoctorsPage from './components/Doctors/Doctors';
+import DoctorDashboard from './components/DoctorDashBoard/docDash';
+import PatientDashboard from './components/PatientDashBoard/Patdash';
+import HealthRecordPage from './components/HealthRecords/Healthrecords';
+import AppointmentBooking from './components/Appointments/Appointments';
+import MedicalDocuments from './components/MedicalDocuments/MedicalDocuments';
+import Footer from "./components/Footer/Footer"
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
           <Route path="/medicaldocuments" element ={<MedicalDocuments/>} />
         </Routes>
       </BrowserRouter>
+      <Footer/>
     </div>
   )
 }

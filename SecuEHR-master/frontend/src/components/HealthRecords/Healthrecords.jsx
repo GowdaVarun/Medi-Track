@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
-import './HealthRecords.css'; // Import a CSS file for styling
+import "./HealthRecords.css"; // Import a CSS file for styling
 
 const MedicalRecords = () => {
   const [records, setRecords] = useState([]);
   const [formData, setFormData] = useState({
-    patientId: '',
-    diagnosis: '',
-    treatmentPlan: '',
-    medications: '',
-    dateOfVisit: '',
-    attendingDoctor: '',
-    labResults: '',
-    followUpDate: '',
+    patientId: "",
+    diagnosis: "",
+    treatmentPlan: "",
+    medications: "",
+    dateOfVisit: "",
+    attendingDoctor: "",
+    labResults: "",
+    followUpDate: "",
   });
   const [showForm, setShowForm] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
@@ -25,12 +25,14 @@ const MedicalRecords = () => {
 
     const fetchRecords = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/medical-records');
+        const response = await axios.get(
+          "http://localhost:3001/medical-records"
+        );
         if (isMounted) {
           setRecords(response.data);
         }
       } catch (error) {
-        console.error('Error fetching medical records:', error);
+        console.error("Error fetching medical records:", error);
       }
     };
 
@@ -51,29 +53,33 @@ const MedicalRecords = () => {
   const handleFormSubmit = async () => {
     try {
       if (isEditMode) {
-        await axios.put(`http://localhost:3001/medical-records/${selectedRecord._id}`, formData);
+        await axios.put(
+          `http://localhost:3001/medical-records/${selectedRecord._id}`,
+          formData
+        );
       } else {
-        await axios.post('http://localhost:3001/medical-records', formData);
+        await axios.post("http://localhost:3001/medical-records", formData);
       }
 
-      const response = await axios.get('http://localhost:3001/medical-records');
+      const response = await axios.get("http://localhost:3001/medical-records");
       setRecords(response.data);
 
       setShowForm(false);
       setIsEditMode(false);
       setSelectedRecord(null);
       setFormData({
-        patientId: '',
-        diagnosis: '',
-        treatmentPlan: '',
-        medications: '',
-        dateOfVisit: '',
-        attendingDoctor: '',
-        labResults: '',
-        followUpDate: '',
+        patientId: "",
+        diagnosis: "",
+        treatmentPlan: "",
+        medications: "",
+        dateOfVisit: "",
+        attendingDoctor: "",
+        labResults: "",
+        followUpDate: "",
+        contact: "",
       });
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error("Error submitting form:", error);
     }
   };
 
@@ -87,6 +93,7 @@ const MedicalRecords = () => {
       attendingDoctor: selectedRecord.attendingDoctor,
       labResults: selectedRecord.labResults,
       followUpDate: selectedRecord.followUpDate,
+      contact: selectedRecord.contact,
     });
 
     setSelectedRecord(selectedRecord);
@@ -97,47 +104,58 @@ const MedicalRecords = () => {
   const handleDeleteRecord = async (recordId) => {
     try {
       await axios.delete(`http://localhost:3001/medical-records/${recordId}`);
-      setRecords((prevRecords) => prevRecords.filter((record) => record._id !== recordId));
+      setRecords((prevRecords) =>
+        prevRecords.filter((record) => record._id !== recordId)
+      );
     } catch (error) {
-      console.error('Error deleting medical record:', error);
+      console.error("Error deleting medical record:", error);
     }
   };
 
   return (
     <div className="medical-records-container">
       <div className="header">
-      <Link
+        <Link
           to={
-            localStorage.getItem('role') === 'Admin'
-              ? '/home'
-              : localStorage.getItem('role') === 'Patient'
-              ? '/patdash'
-              : '/docdash'
+            localStorage.getItem("role") === "Admin"
+              ? "/home"
+              : localStorage.getItem("role") === "Patient"
+              ? "/patdash"
+              : "/docdash"
           }
-          style={{ position: 'absolute', top: '20px', left: '20px' }}
+          style={{ position: "absolute", top: "20px", left: "20px" }}
         >
           <button className="btn btn-primary">Dashboard</button>
         </Link>
       </div>
 
-      <h1 style={{ display: 'block', textAlign: 'center', marginTop: '70px' }}>Medical Records</h1>
+      <h1 style={{ display: "block", textAlign: "center", marginTop: "70px" }}>
+        Medical Records
+      </h1>
 
       <div className="action-buttons">
-        <button className="btn btn-success" onClick={() => setShowForm((prevShowForm) => !prevShowForm)}>
-          {showForm ? 'Hide Form' : 'Add Medical Record'}
+        <button
+          className="btn btn-success"
+          onClick={() => setShowForm((prevShowForm) => !prevShowForm)}
+        >
+          {showForm ? "Hide Form" : "Add Medical Record"}
         </button>
       </div>
 
       {showForm && (
         <div className="form-container">
-          <h2>{isEditMode ? 'Edit Medical Record' : 'Add New Medical Record'}</h2>
+          <h2>
+            {isEditMode ? "Edit Medical Record" : "Add New Medical Record"}
+          </h2>
           <form>
             <div className="form-group">
               <label>Patient ID:</label>
               <input
                 type="text"
                 value={formData.patientId}
-                onChange={(e) => handleFormFieldChange('patientId', e.target.value)}
+                onChange={(e) =>
+                  handleFormFieldChange("patientId", e.target.value)
+                }
               />
             </div>
             <div className="form-group">
@@ -145,7 +163,9 @@ const MedicalRecords = () => {
               <input
                 type="text"
                 value={formData.diagnosis}
-                onChange={(e) => handleFormFieldChange('diagnosis', e.target.value)}
+                onChange={(e) =>
+                  handleFormFieldChange("diagnosis", e.target.value)
+                }
               />
             </div>
             <div className="form-group">
@@ -153,7 +173,9 @@ const MedicalRecords = () => {
               <input
                 type="text"
                 value={formData.treatmentPlan}
-                onChange={(e) => handleFormFieldChange('treatmentPlan', e.target.value)}
+                onChange={(e) =>
+                  handleFormFieldChange("treatmentPlan", e.target.value)
+                }
               />
             </div>
             <div className="form-group">
@@ -161,7 +183,9 @@ const MedicalRecords = () => {
               <input
                 type="text"
                 value={formData.medications}
-                onChange={(e) => handleFormFieldChange('medications', e.target.value)}
+                onChange={(e) =>
+                  handleFormFieldChange("medications", e.target.value)
+                }
               />
             </div>
             <div className="form-group">
@@ -169,7 +193,9 @@ const MedicalRecords = () => {
               <input
                 type="date"
                 value={formData.dateOfVisit}
-                onChange={(e) => handleFormFieldChange('dateOfVisit', e.target.value)}
+                onChange={(e) =>
+                  handleFormFieldChange("dateOfVisit", e.target.value)
+                }
               />
             </div>
             <div className="form-group">
@@ -177,7 +203,9 @@ const MedicalRecords = () => {
               <input
                 type="text"
                 value={formData.attendingDoctor}
-                onChange={(e) => handleFormFieldChange('attendingDoctor', e.target.value)}
+                onChange={(e) =>
+                  handleFormFieldChange("attendingDoctor", e.target.value)
+                }
               />
             </div>
             <div className="form-group">
@@ -185,7 +213,9 @@ const MedicalRecords = () => {
               <input
                 type="text"
                 value={formData.labResults}
-                onChange={(e) => handleFormFieldChange('labResults', e.target.value)}
+                onChange={(e) =>
+                  handleFormFieldChange("labResults", e.target.value)
+                }
               />
             </div>
             <div className="form-group">
@@ -193,11 +223,27 @@ const MedicalRecords = () => {
               <input
                 type="date"
                 value={formData.followUpDate}
-                onChange={(e) => handleFormFieldChange('followUpDate', e.target.value)}
+                onChange={(e) =>
+                  handleFormFieldChange("followUpDate", e.target.value)
+                }
               />
             </div>
-            <button className="btn btn-primary" type="button" onClick={handleFormSubmit}>
-              {isEditMode ? 'Save Changes' : 'Add Medical Record'}
+            <div className="form-group">
+              <label>Contact:</label>
+              <input
+                type="text"
+                value={formData.contact}
+                onChange={(e) =>
+                  handleFormFieldChange("contact", e.target.value)
+                }
+              />
+            </div>
+            <button
+              className="btn btn-primary"
+              type="button"
+              onClick={handleFormSubmit}
+            >
+              {isEditMode ? "Save Changes" : "Add Medical Record"}
             </button>
           </form>
         </div>
@@ -206,7 +252,11 @@ const MedicalRecords = () => {
       <table className="table">
         <thead>
           <tr>
-            <th>{localStorage.getItem('role') === 'Patient' ? 'Your ID' : 'Patient ID'}</th>
+            <th>
+              {localStorage.getItem("role") === "Patient"
+                ? "Your ID"
+                : "Patient ID"}
+            </th>
             <th>Diagnosis</th>
             <th>Treatment Plan</th>
             <th>Medications</th>
@@ -214,7 +264,8 @@ const MedicalRecords = () => {
             <th>Attending Doctor</th>
             <th>Lab Results</th>
             <th>Follow-up Date</th>
-            {localStorage.getItem('role') !== 'Patient' && <th>Actions</th>}
+            <th>Contact</th>
+            {localStorage.getItem("role") !== "Patient" && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
@@ -228,14 +279,21 @@ const MedicalRecords = () => {
               <td>{record.attendingDoctor}</td>
               <td>{record.labResults}</td>
               <td>{record.followUpDate}</td>
+              <td>{record.contact}</td>
               <td>
                 {/* Conditionally render the Edit and Delete buttons based on user role */}
-                {localStorage.getItem('role') !== 'Patient' && (
+                {localStorage.getItem("role") !== "Patient" && (
                   <>
-                    <button className="btn btn-info" onClick={() => handleEditRecord(record)}>
+                    <button
+                      className="btn btn-info"
+                      onClick={() => handleEditRecord(record)}
+                    >
                       Edit
                     </button>
-                    <button className="btn btn-danger" onClick={() => handleDeleteRecord(record._id)}>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleDeleteRecord(record._id)}
+                    >
                       Delete
                     </button>
                   </>

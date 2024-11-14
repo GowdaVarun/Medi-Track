@@ -1,40 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import './Home.css';
-import backgroundImage from '../images/background.jpg';
+import '../Home/Home.css';
 
-const Dashboard = () => {
-    const [backgroundStyle, setBackgroundStyle] = useState({
-        background: `url(${backgroundImage}) no-repeat center center fixed`,
-        backgroundSize: 'cover',
-        minHeight: '100vh',
+const PatientDashboard = () => {
+    const backgroundStyle = {
+        background: 'linear-gradient(135deg, #16222A, #3A6073)',
+        minHeight: '105vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '50px',
-    });
-
-    useEffect(() => {
-        const newBackgroundStyle = {
-            background: `url(${backgroundImage}) no-repeat center center fixed`,
-            backgroundSize: 'cover',
-            minHeight: '105vh',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '50px',
-        };
-        setBackgroundStyle(newBackgroundStyle);
-    }, []);
+    };
 
     const navigationButtons = [
-        { name: 'Patients', link: '/patients' },
-        { name: 'Doctors/Practitioners', link: '/doctors' },
-        // { name: 'Medical Records', link: '/healthrecords' },
-        { name: 'User Management', link: '/medicaldocuments' },
+        { name: 'My Medical Records', link: '/healthrecords' },
         { name: 'Appointments', link: '/appointments' },
+        {name: 'My entries',link: '/patients'},
+        { name: 'Find Doctors', link: '/doctors' },
+
     ];
 
     const buttonStyle = {
@@ -52,7 +36,7 @@ const Dashboard = () => {
 
     return (
         <div style={backgroundStyle}>
-            <h1 style={{ color: '#fff', fontSize: '36px', marginBottom: '30px' }}>Welcome to Medi-Track Admin Dashboard !</h1>
+            <h1 style={{ color: '#fff', fontSize: '36px', marginBottom: '30px' }}>Welcome to Medi-Track Patient Dashboard !</h1>
             <div className="button-container">
                 {navigationButtons.map((button, index) => (
                     <Link key={index} to={button.link} className="btn" style={buttonStyle}>
@@ -66,4 +50,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default PatientDashboard;

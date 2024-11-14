@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './Home.css';
+import '../Home/Home.css';
 
-const PatientDashboard = () => {
+const DoctorDashboard = () => {
     const backgroundStyle = {
         background: 'linear-gradient(135deg, #16222A, #3A6073)',
         minHeight: '105vh',
@@ -14,11 +14,9 @@ const PatientDashboard = () => {
     };
 
     const navigationButtons = [
-        { name: 'My Medical Records', link: '/healthrecords' },
+        { name: 'Patients', link: '/patients' },
+        { name: 'Medical Records', link: '/healthrecords' },
         { name: 'Appointments', link: '/appointments' },
-        {name: 'My entries',link: '/patients'},
-        { name: 'Find Doctors', link: '/doctors' },
-
     ];
 
     const buttonStyle = {
@@ -36,7 +34,7 @@ const PatientDashboard = () => {
 
     return (
         <div style={backgroundStyle}>
-            <h1 style={{ color: '#fff', fontSize: '36px', marginBottom: '30px' }}>Welcome to Medi-Track Patient Dashboard !</h1>
+            <h1 style={{ color: '#fff', fontSize: '36px', marginBottom: '30px' }}>Welcome to Medi-Track Doctor Dashboard !</h1>
             <div className="button-container">
                 {navigationButtons.map((button, index) => (
                     <Link key={index} to={button.link} className="btn" style={buttonStyle}>
@@ -50,4 +48,4 @@ const PatientDashboard = () => {
     );
 };
 
-export default PatientDashboard;
+export default DoctorDashboard;
