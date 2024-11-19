@@ -35,7 +35,6 @@ const patientSchema = new mongoose.Schema({
   disease:{
     type: String,
     default: "",
-    required: false
   },
   contact: {
     type: String,

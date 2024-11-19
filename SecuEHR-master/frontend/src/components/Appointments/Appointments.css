@@ -1,0 +1,51 @@
+/* AppointmentBooking.css */
+
+.container {
+  background: linear-gradient(to right, #232526, #414345);
+  color: #ffffff;
+  padding: 20px;
+  height: 100vh;
+  overflow-y: scroll;
+}
+
+.button-dashboard {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border: 2px solid #1e1e1e;
+  padding: 10px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  outline: none;
+  transition: border-color 0.3s ease-out;
+  margin-top: 60px;
+  margin-left: 10px;
+}
+
+.heading-text {
+  text-align: center;
+  margin: 5px 0 0;
+  color: white;
+}
+
+.form-container {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  width: 60%;
+  margin: 20px auto;
+}
+
+.form-container h3 {
+  color: white;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.table {
+  color: white;
+}
+
+.table-header, .table-cell {
+  color: white;
+}
+.appointment-heading { color: 'white', marginBottom: '10px', marginTop: '10px' }
