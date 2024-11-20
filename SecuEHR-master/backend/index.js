@@ -531,7 +531,7 @@ app.delete('/doctors/:id', async (req, res) => {
 
 app.post('/medical-records', async (req, res) => {
   const {
-    contact,
+    patientName,
     diagnosis,
     treatmentPlan,
     medications,
@@ -540,13 +540,14 @@ app.post('/medical-records', async (req, res) => {
     labResults,
     followUpDate,
   } = req.body;
+  console.log("patientName",patientName);
   
   try {
-    const encryptedcontact = encrypt(contact);
-    const patient = await PatientModel.find({'contact': encryptedcontact});
-    if(patient.length!=0){
+    // const encryptedcontact = encrypt(contact);
+    // const patient = await PatientModel.find({'contact': encryptedcontact});
+    // if(patient.length!=0){
     const encryptedRecord = {
-      patientName: encrypt(patient.firstname),
+      patientName: encrypt(patientName),
       diagnosis: encrypt(diagnosis),
       treatmentPlan: encrypt(treatmentPlan),
       medications: encrypt(medications),
@@ -558,14 +559,16 @@ app.post('/medical-records', async (req, res) => {
 
     const medicalRecord = new MedicalRecordModel(encryptedRecord);
     const newRecord = await medicalRecord.save();
-    res.status(201).json(newRecord);}
-    else{
-      console.log("Patient not found");
-      res.status(404).json({});
-    }
+    res.status(201).json(newRecord);
+  // }
+    // else{
+    //   console.log("Patient not found");
+    //   res.status(404).json({});
+    // }
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
+
 });
 
 app.get('/medical-records', async (req, res) => {
@@ -574,7 +577,7 @@ app.get('/medical-records', async (req, res) => {
     if(records){
     const decryptedRecords = records.map((record) => ({
       _id: record._id,
-      patientId: decrypt(record.patientId),
+      patientName: decrypt(record.patientName),
       diagnosis: decrypt(record.diagnosis),
       treatmentPlan: decrypt(record.treatmentPlan),
       medications: decrypt(record.medications),

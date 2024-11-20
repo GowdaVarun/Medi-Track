@@ -19,10 +19,10 @@ const MedicalRecords = () => {
   const [showForm, setShowForm] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [patients, setPatients] = useState([]);
 
   useEffect(() => {
     let isMounted = true;
-
     const fetchRecords = async () => {
       try {
         const response = await axios.get(
@@ -52,18 +52,52 @@ const MedicalRecords = () => {
 
   const handleFormSubmit = async () => {
     try {
+      //fetch patients
+    const fetchPatients = async () => {
+      try {
+        const role = localStorage.getItem('role');
+        const email = localStorage.getItem('email');
+        let result;
+        if (role === 'Admin'|| role === 'Doctor') {
+          result = await axios.get('http://localhost:3001/patients');
+        } else if (role === 'Patient') {
+          result = await axios.get('http://localhost:3001/myentries', {
+            params: { patientemail: email },
+          });
+        }
+        console.log("patients in result.data",result.data);
+        setPatients(result.data);
+        console.log("patients in patients variable",patients);
+      } catch (error) {
+        console.error('Error fetching patients:', error);
+      }
+    };
+    fetchPatients();
+    const filteredpatient = patients.filter(
+      (patient) => patient.contact === formData.contact
+    );
+    console.log("filtered patient[0]=> ",filteredpatient[0]);
+    
+    if(filteredpatient){
       if (isEditMode) {
         await axios.put(
           `http://localhost:3001/medical-records/${selectedRecord._id}`,
-          formData
+          {
+            ...formData,
+            patientName: filteredpatient[0].firstname,
+          }
         );
       } else {
-        await axios.post("http://localhost:3001/medical-records", formData);
+        await axios.post("http://localhost:3001/medical-records", {
+          ...formData,
+          patientName: filteredpatient[0].firstname,
+        });
       }
-
+    }else{
+      console.error("Couldnot find patient with given contact number");
+    }
       const response = await axios.get("http://localhost:3001/medical-records");
       setRecords(response.data);
-
       setShowForm(false);
       setIsEditMode(false);
       setSelectedRecord(null);
@@ -93,9 +127,28 @@ const MedicalRecords = () => {
       labResults: selectedRecord.labResults,
       followUpDate: selectedRecord.followUpDate,
     });
-
     setSelectedRecord(selectedRecord);
     setIsEditMode(true);
+    const fetchPatients = async () => {
+      try {
+        const role = localStorage.getItem('role');
+        const email = localStorage.getItem('email');
+        let result;
+        if (role === 'Admin'|| role === 'Doctor') {
+          result = await axios.get('http://localhost:3001/patients');
+        } else if (role === 'Patient') {
+          result = await axios.get('http://localhost:3001/myentries', {
+            params: { patientemail: email },
+          });
+        }
+        setPatients(result.data);
+        console.log("patients",result.data);
+        console.log("patients",patients);
+      } catch (error) {
+        console.error('Error fetching patients:', error);
+      }
+      fetchPatients();
+    };
     setShowForm(true);
   };
 
@@ -146,14 +199,6 @@ const MedicalRecords = () => {
             {isEditMode ? "Edit Medical Record" : "Add New Medical Record"}
           </h2>
           <form>
-            <div className="form-group">
-              <label>Patient Contact-Number:</label>
-              <input
-                type="text"
-                value={formData.contact}
-                onChange={(e) => handleFormFieldChange('contact', e.target.value)}
-              />
-            </div>
             <div className="form-group">
               <label>Diagnosis:</label>
               <input
@@ -262,7 +307,7 @@ const MedicalRecords = () => {
         <tbody>
           {records.map((record) => (
             <tr key={record._id}>
-              <td>{record.name}</td>
+              <td>{record.patientName}</td>
               <td>{record.diagnosis}</td>
               <td>{record.treatmentPlan}</td>
               <td>{record.medications}</td>
