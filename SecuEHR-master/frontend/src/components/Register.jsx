@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import './Register.css';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -14,7 +15,6 @@ const Register = () => {
   const [lastname, setLastname] = useState('');
   const [age, setAge] = useState('');
   const [regDate, setRegDate] = useState('');
-  const [disease, setDisease] = useState('');
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [registrationError, setRegistrationError] = useState(false);
   const [registrationFailed, setRegistrationFailed] = useState(false);
@@ -24,16 +24,14 @@ const Register = () => {
   const handleRegisterClick = (event) => {
     event.preventDefault();
     
-    let registrationData = { name, email, password, role };
+    let registrationData = { email, password, role };
 
-    // Add specific data based on the role
     if (role === 'Doctor') {
-      registrationData = { ...registrationData, specialization, location, contact };
+      registrationData = { ...registrationData, name, specialization, location, contact };
     } else if (role === 'Patient') {
       registrationData = { ...registrationData, firstname, lastname, age, regDate, contact };
     }
 
-    // Send the registration request
     axios.post(`${backend_url}/register`, registrationData)
       .then(response => {
         if (response.data === 'success') {
@@ -63,84 +61,277 @@ const Register = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center text-center vh-100"
-      style={{
-        backgroundImage: 'url("welcomebg.png")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-      <div className="bg-white p-3 rounded" style={{ width: '50%' }}>
-        <h2 className="mb-3 text-primary">Register</h2>
+    <div className="register-background">
+      <div className="register-container">
+        <h2 className="register-title text-primary">Register</h2>
         
         <form onSubmit={handleRegisterClick}>
-          <div className="mb-3 text-start">
-            <label htmlFor="name" className="form-label"><strong>Name</strong></label>
-            <input type="text" placeholder="Enter Your Name" className="form-control" id="name" value={name} onChange={(e) => setName(e.target.value)} required />
-          </div>
-          <div className="mb-3 text-start">
-            <label htmlFor="email" className="form-label"><strong>Email</strong></label>
-            <input type="email" placeholder="Enter Email" className="form-control" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          </div>
-          <div className="mb-3 text-start">
-            <label htmlFor="password" className="form-label"><strong>Password</strong></label>
-            <input type="password" placeholder="Enter Password" className="form-control" id="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          </div>
-          <div className="mb-3 text-start">
-            <label htmlFor="role" className="form-label"><strong>Role</strong></label>
-            <select className="form-select" id="role" value={role} onChange={(e) => setRole(e.target.value)} required>
-              <option value="">Select Role</option>
-              <option value="Admin">Admin</option>
-              <option value="Patient">Patient</option>
-              <option value="Doctor">Doctor</option>
-            </select>
-          </div>
+          {/* Role Selection First */}
+          <div className="input-group mb-3 text-start">
+              <div className="label-container">
+                <label htmlFor="role"><strong>Role</strong></label>
+              </div>
+              <div className="input-container">
+                <select className="form-select" id="role" value={role} onChange={(e) => setRole(e.target.value)} required>
+                  <option value="">Select Role</option>
+                  <option value="Admin">Admin</option>
+                  <option value="Patient">Patient</option>
+                  <option value="Doctor">Doctor</option>
+                </select>
+              </div>
+            </div>
 
-          {/* Additional fields based on role */}
-          {role === 'Doctor' && (
-            <>
-              <div className="mb-3 text-start">
-                <label htmlFor="specialization" className="form-label"><strong>Specialization</strong></label>
-                <input type="text" placeholder="Specialization" className="form-control" id="specialization" value={specialization} onChange={(e) => setSpecialization(e.target.value)} required />
-              </div>
-              <div className="mb-3 text-start">
-                <label htmlFor="location" className="form-label"><strong>Location</strong></label>
-                <input type="text" placeholder="Location" className="form-control" id="location" value={location} onChange={(e) => setLocation(e.target.value)} required />
-              </div>
-              <div className="mb-3 text-start">
-                <label htmlFor="contact" className="form-label"><strong>Contact</strong></label>
-                <input type="text" placeholder="Contact" className="form-control" id="contact" value={contact} onChange={(e) => setContact(e.target.value)} required />
-              </div>
-            </>
-          )}
-          {role === 'Patient' && (
-            <>
-              <div className="mb-3 text-start">
-                <label htmlFor="firstname" className="form-label"><strong>First Name</strong></label>
-                <input type="text" placeholder="First Name" className="form-control" id="firstname" value={firstname} onChange={(e) => setFirstname(e.target.value)} required />
-              </div>
-              <div className="mb-3 text-start">
-                <label htmlFor="lastname" className="form-label"><strong>Last Name</strong></label>
-                <input type="text" placeholder="Last Name" className="form-control" id="lastname" value={lastname} onChange={(e) => setLastname(e.target.value)} required />
-              </div>
-              <div className="mb-3 text-start">
-                <label htmlFor="age" className="form-label"><strong>Age</strong></label>
-                <input type="text" placeholder="Age" className="form-control" id="age" value={age} onChange={(e) => setAge(e.target.value)} required />
-              </div>
-              <div className="mb-3 text-start">
-                <label htmlFor="regDate" className="form-label"><strong>Registration Date</strong></label>
-                <input type="text" placeholder="Registration Date" className="form-control" id="regDate" value={regDate} onChange={(e) => setRegDate(e.target.value)} required />
-              </div>
-              <div className="mb-3 text-start">
-                <label htmlFor="contact" className="form-label"><strong>Contact</strong></label>
-                <input type="text" placeholder="Contact" className="form-control" id="contact" value={contact} onChange={(e) => setContact(e.target.value)} required />
-              </div>
-            </>
-          )}
+            {/* Show Name and Password after role selection */}
 
+            {/* Conditional fields for Doctor */}
+            {role === 'Doctor' && (
+              <>
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="firstname"><strong>Name</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="text" 
+                      placeholder="First Name" 
+                      className="form-control" 
+                      id="firstname" 
+                      value={name} 
+                      onChange={(e) => setName(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div>
+                {/* <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="lastname"><strong>Last Name</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="text" 
+                      placeholder="Last Name" 
+                      className="form-control" 
+                      id="lastname" 
+                      value={lastname} 
+                      onChange={(e) => setLastname(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div> */}
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="specialization"><strong>Specialization</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="text" 
+                      placeholder="Specialization" 
+                      className="form-control" 
+                      id="specialization" 
+                      value={specialization} 
+                      onChange={(e) => setSpecialization(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div>
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="location"><strong>Location</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="text" 
+                      placeholder="Location" 
+                      className="form-control" 
+                      id="location" 
+                      value={location} 
+                      onChange={(e) => setLocation(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div>
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="contact"><strong>Contact</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="text" 
+                      placeholder="Contact" 
+                      className="form-control" 
+                      id="contact" 
+                      value={contact} 
+                      onChange={(e) => setContact(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Conditional fields for Patient */}
+            {role === 'Patient' && (
+              <>
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="firstname"><strong>First Name</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="text" 
+                      placeholder="First Name" 
+                      className="form-control" 
+                      id="firstname" 
+                      value={firstname} 
+                      onChange={(e) => setFirstname(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div>
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="lastname"><strong>Last Name</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="text" 
+                      placeholder="Last Name" 
+                      className="form-control" 
+                      id="lastname" 
+                      value={lastname} 
+                      onChange={(e) => setLastname(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div>
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="age"><strong>Age</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="text" 
+                      placeholder="Age" 
+                      className="form-control" 
+                      id="age" 
+                      value={age} 
+                      onChange={(e) => setAge(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div>
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="regDate"><strong>Registration Date</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="text" 
+                      placeholder="Registration Date" 
+                      className="form-control" 
+                      id="regDate" 
+                      value={regDate} 
+                      onChange={(e) => setRegDate(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div>
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="contact"><strong>Contact</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="text" 
+                      placeholder="Contact" 
+                      className="form-control" 
+                      id="contact" 
+                      value={contact} 
+                      onChange={(e) => setContact(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Conditional fields for Admin */}
+            {role === 'Admin' && (
+              <>
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="firstname"><strong>First Name</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="text" 
+                      placeholder="First Name" 
+                      className="form-control" 
+                      id="firstname" 
+                      value={firstname} 
+                      onChange={(e) => setFirstname(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div>
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="lastname"><strong>Last Name</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="text" 
+                      placeholder="Last Name" 
+                      className="form-control" 
+                      id="lastname" 
+                      value={lastname} 
+                      onChange={(e) => setLastname(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+
+            {role && (
+              <>
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="email"><strong>Email</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="email" 
+                      placeholder="Enter Email" 
+                      className="form-control" 
+                      id="email" 
+                      value={email} 
+                      onChange={(e) => setEmail(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div>
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="password"><strong>Password</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="password" 
+                      placeholder="Enter Password" 
+                      className="form-control" 
+                      id="password" 
+                      value={password} 
+                      onChange={(e) => setPassword(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div>
+              </>
+            )}
           <button type="submit" className="btn btn-primary">Register</button>
         </form>
-        
+
         {registrationSuccess && (
           <div className="alert alert-success mt-3" role="alert">
             Registration successful! Redirecting to login...

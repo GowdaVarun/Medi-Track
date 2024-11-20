@@ -1,5 +1,5 @@
 /* Background and Container Styles */
-.login-background {
+.register-background {
     background: linear-gradient(to right, #4ccb11, #2575fc); /* Two-color gradient */
     background-size: cover;
     background-position: center;
@@ -10,31 +10,31 @@
     text-align: center;
 }
 
-.login-container {
+.register-container {
     background-color: rgba(255, 255, 255, 0.95);
     padding: 45px;
     border-radius: 25px; /* Increased the border radius for a softer look */
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Slightly reduced shadow opacity for a more subtle effect */
     width: 100%;
-    max-width: 450px;
+    max-width: 500px;
+    max-height: fit-content;
 }
 
-.login-title {
+.register-title {
     color: #6a11cb;
     font-size: 32px;
     font-weight: bold;
-    margin-bottom: 25px;
+    margin-bottom: 22px;
     text-align: center;
 }
 
 /* Form Input Group Styles */
 .input-group {
-    margin-bottom: 0px; /* Reduced space between input fields */
+    margin-bottom: 0px; /* Added space between input fields */
 }
 
 .label-container {
-    margin-bottom: 0px; /* Reduced gap between label and input */
-    max-height: 6px;
+    margin-bottom: 10px; /* Adjusted gap between label and input */
     text-align: left;
 }
 
@@ -42,18 +42,19 @@
     width: 100%;
 }
 
+/* Label Styles */
 .input-group label {
     color: #444;
     font-weight: 600;
-    font-size: 20px;
+    font-size: 18px; /* Adjusted font size for better readability */
     margin-bottom: 5px; /* Reduced gap between label and input */
     display: block;
-    text-align: left;
 }
 
+/* Input Fields Styles */
 .input-group input,
 .input-group select {
-    border-radius: 25px;
+    border-radius: 25px; /* Rounded input fields */
     border: 1px solid #ddd;
     padding: 12px 18px;
     font-size: 16px;
@@ -81,14 +82,14 @@
     background-color: #2575fc;
     border: none;
     color: white;
-    padding: 12px 160px; /* Adjusted padding for a more consistent button size */
+    padding: 12px 100px; /* Adjusted padding for a more consistent button size */
     border-radius: 25px;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s;
     font-size: 20px; /* Increased font size for better readability */
     text-align: center;
-    width: 110%;
+    width: 95%;
 }
 
 .btn-primary:hover {
