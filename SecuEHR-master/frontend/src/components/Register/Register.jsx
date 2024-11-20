@@ -26,7 +26,7 @@ const Register = () => {
     
     let registrationData = { email, password, role };
 
-    if (role === 'Doctor') {
+    if (role === 'Doctor' || role === 'Admin') {
       registrationData = { ...registrationData, name, specialization, location, contact };
     } else if (role === 'Patient') {
       registrationData = { ...registrationData, firstname, lastname, age, regDate, contact };
@@ -260,32 +260,16 @@ const Register = () => {
               <>
                 <div className="input-group mb-3 text-start">
                   <div className="label-container">
-                    <label htmlFor="firstname"><strong>First Name</strong></label>
+                    <label htmlFor="firstname"><strong>Name</strong></label>
                   </div>
                   <div className="input-container">
                     <input 
                       type="text" 
-                      placeholder="First Name" 
+                      placeholder="Name" 
                       className="form-control" 
-                      id="firstname" 
-                      value={firstname} 
-                      onChange={(e) => setFirstname(e.target.value)} 
-                      required 
-                    />
-                  </div>
-                </div>
-                <div className="input-group mb-3 text-start">
-                  <div className="label-container">
-                    <label htmlFor="lastname"><strong>Last Name</strong></label>
-                  </div>
-                  <div className="input-container">
-                    <input 
-                      type="text" 
-                      placeholder="Last Name" 
-                      className="form-control" 
-                      id="lastname" 
-                      value={lastname} 
-                      onChange={(e) => setLastname(e.target.value)} 
+                      id="name" 
+                      value={name} 
+                      onChange={(e) => setName(e.target.value)} 
                       required 
                     />
                   </div>
