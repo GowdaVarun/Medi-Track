@@ -4,6 +4,7 @@ import axios from 'axios';
 
 const PatientsPage = () => {
   const [patients, setPatients] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
   const [newPatient, setNewPatient] = useState({
     email: '',
     password: '',
@@ -18,31 +19,35 @@ const PatientsPage = () => {
   const [editablePatientId, setEditablePatientId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddPatientForm, setShowAddPatientForm] = useState(false);
-  
+
   const handleSave = async (id) => {
     console.log(`Saving patient with ID: ${id}`);
     setEditablePatientId(null);
     const role = localStorage.getItem('role');
     const name = localStorage.getItem('name');
-      
+    
     // Find the patient to be edited in the local state
     const editedPatient = patients.find((patient) => patient._id === id);
-
+    
     try {
       // Make the PUT request to update the patient in the backend
       await axios.put(`http://localhost:3001/patients/${id}`, editedPatient);
-     
+      
       // Fetch the updated list of patients after editing
       if(role==='Patient'){
-        const result = await axios.get('http://localhost:3001/myentries');
+        const result = await axios.get('http://localhost:3001/myentries',{
+          params: { patientemail: patients[0].email }
+        });
         setPatients(result.data);
       }else{
         const result = await axios.get('http://localhost:3001/patients');
         setPatients(result.data);
       }
+      console.log("patients",patients);
     } catch (error) {
       console.error('Error editing patient:', error);
     }
+    setIsEditing(false);
   };
   useEffect(() => {
     const fetchPatients = async () => {
@@ -58,26 +63,43 @@ const PatientsPage = () => {
           });
         }
         setPatients(result.data);
+        console.log("patients",patients);
       } catch (error) {
         console.error('Error fetching patients:', error);
       }
     };
-  
     fetchPatients();
   }, []);
-  
+
+
   const handleAddPatient = async () => {
     try {
       const role = localStorage.getItem('role');
       if (role === 'Patient') {
-        const patientDetails = { ...patients, disease: newPatient.disease };
-        await axios.put(`http://localhost:3001/patients/${patients._id}`, patientDetails);
+        const patientDetails = { ...patients[0], disease: newPatient.disease };
+        console.log("patientDetails",patientDetails);
+        await axios.put(`http://localhost:3001/patients/${patientDetails._id}`, patientDetails);
       } else {//admin
         await axios.post('http://localhost:3001/patients', newPatient);
       }
-  
       setShowAddPatientForm(false);
-      fetchPatients(); // Refresh the patients list
+      // Refresh the patients list
+      try {
+        const role = localStorage.getItem('role');
+        const email = localStorage.getItem('email');
+        let result;
+        if (role === 'Admin'|| role === 'Doctor') {
+          result = await axios.get('http://localhost:3001/patients');
+        } else if (role === 'Patient') {
+          result = await axios.get('http://localhost:3001/myentries', {
+            params: { patientemail: email },
+          });
+        }
+        setPatients(result.data);
+        console.log("patients",patients);
+      } catch (error) {
+        console.error('Error fetching patients:', error);
+      }
     } catch (error) {
       console.error('Error adding patient:', error);
     }
@@ -85,6 +107,7 @@ const PatientsPage = () => {
 
   const handleEdit = (id) => {
     console.log(`Editing patient with ID: ${id}`);
+    setIsEditing(true);
     setEditablePatientId(id);
   };
 
@@ -115,11 +138,18 @@ const PatientsPage = () => {
   const navigate = useNavigate();
 
   // Filter patients by name based on the search term
-  const filteredPatients = patients.filter(
+  const filteredPatients = isEditing ? 
+  patients.filter(
     (patient) =>
-      patient.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      patient.lastname.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+      (patient.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+       patient.lastname.toLowerCase().includes(searchTerm.toLowerCase()))
+  ):
+  patients.filter(
+    (patient) =>
+      patient.disease.trim() !== "" && // Exclude patients with empty disease field
+      (patient.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+       patient.lastname.toLowerCase().includes(searchTerm.toLowerCase()))
+  ); 
 
   return (
     <div
@@ -246,27 +276,27 @@ const PatientsPage = () => {
         overflowX: 'auto',
       }}
       >
+      {console.log("Inside",patients)}
       <h3 style={{ color: 'white', marginBottom: '20px' }}>Add Symptoms</h3>
       {showAddPatientForm && (
         <div className="row">
           <div className="col">
             <input
               type="text"
-              value={patients.firstname}
-              placeholder="First Name"
+              placeholder={patients[0].firstname}
               className="form-control mb-3"
               readOnly
             />
             <input
               type="text"
-              value={patients.lastname}
+              value={patients[0].lastname}
               placeholder="Last Name"
               className="form-control mb-3"
               readOnly
             />
             <input
               type="text"
-              value={patients.age}
+              value={patients[0].age}
               placeholder="Age"
               className="form-control mb-3"
               readOnly
@@ -275,34 +305,28 @@ const PatientsPage = () => {
           <div className="col">
             <input
               type="text"
-              value={patients.regDate}
+              value={patients[0].regDate}
               placeholder="Reg. Date(DD/MM/YYYY)"
               className="form-control mb-3"
               readOnly
             />
             <input
               type="text"
-              value={patients.contact}
+              value={patients[0].contact}
               placeholder="Contact"
               className="form-control mb-3"
               readOnly
             />
             <input
               type="text"
-              value={patients.email}
-              placeholder="Email"
+              placeholder={patients[0].email}
               className="form-control mb-3"
+              readOnly
             />
             <input
               type="text"
-              value={patients.password}
-              placeholder="Password"
-              className="form-control mb-3"
-            />
-            <input
-              type="text"
-              value={patients.disease}
-              onChange={(e) => setNewPatient({ ...patients, disease: e.target.value })}
+              value={newPatient.disease}
+              onChange={(e) => setNewPatient({ ...patients[0], disease: e.target.value })}
               placeholder="Diagnosis"
               className="form-control mb-3"
             />

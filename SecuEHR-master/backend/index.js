@@ -118,6 +118,7 @@ app.get('/patients', async (req, res) => {
       firstname: decrypt(patient.firstname),
       lastname: decrypt(patient.lastname),
       age: decrypt(patient.age),
+      email: patient.email,
       regDate: decrypt(patient.regDate),
       contact: decrypt(patient.contact),
       disease: decrypt(patient.disease),
@@ -137,7 +138,7 @@ app.get('/myentries', async (req, res) => {
     const patients = await PatientModel.find({
       $and: [
         { "email": patientemail },
-        { "disease": {$ne:""} } // Checks that 'disease' is not an empty string
+        { "disease": {$ne:''} } // Checks that 'disease' is not an empty string
       ]
     });   
 
@@ -148,10 +149,10 @@ app.get('/myentries', async (req, res) => {
       lastname: decrypt(patient.lastname),
       age: decrypt(patient.age),
       regDate: decrypt(patient.regDate),
+      email: patient.email,
       contact: decrypt(patient.contact),
       disease: decrypt(patient.disease),
     }));
-    
     res.json(decryptedPatients);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -169,7 +170,7 @@ app.put('/patients/:id', async (req, res) => {
     const existingPatient = await PatientModel.findById(id);
 
     // Decrypt the existing patient information
-    const decryptedPatient = {
+    let decryptedPatient = {
       firstname: decrypt(existingPatient.firstname),
       lastname: decrypt(existingPatient.lastname),
       age: decrypt(existingPatient.age),
@@ -187,12 +188,19 @@ app.put('/patients/:id', async (req, res) => {
         age: encrypt(age || decryptedPatient.age),
         regDate: encrypt(regDate || decryptedPatient.regDate),
         contact: encrypt(contact || decryptedPatient.contact),
-        disease: encrypt(disease || decryptedPatient.disease),
+        disease: encrypt(disease),
       },
       { new: true }
     );
-
-    res.json(updatedPatient);
+    decryptedPatient = {
+      firstname: decrypt(updatedPatient.firstname),
+      lastname: decrypt(updatedPatient.lastname),
+      age: decrypt(updatedPatient.age),
+      regDate: decrypt(updatedPatient.regDate),
+      contact: decrypt(updatedPatient.contact),
+      disease: decrypt(updatedPatient.disease),
+    };
+    res.json(decryptedPatient);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
