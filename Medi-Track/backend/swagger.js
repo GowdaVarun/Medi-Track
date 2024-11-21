@@ -2,8 +2,8 @@ const swaggerAutogen = require('swagger-autogen')();
 
 const doc = {
   info: {
-    title: 'My API',
-    description: 'Node Express API'
+    title: 'Medi-Track Backend API',
+    description: 'API documentation for Medi-Track backend server routes'
   },
   host: 'localhost:3001'
 };
