@@ -22,19 +22,12 @@
     "express-fileupload": "^1.5.1",
     "express-rate-limit": "^7.1.4",
     "jsonwebtoken": "^9.0.2",
-<<<<<<< HEAD:SecuEHR-master/backend/package.json
-    "mongodb": "^6.10.0",
-    "mongoose": "^8.8.2",
-    "multer": "^1.4.5-lts.1"
+    "mongoose": "^8.8.0",
+    "multer": "^1.4.5-lts.1",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.7"
-=======
-    "mongoose": "^8.8.0",
-    "multer": "^1.4.5-lts.1",
-    "nodemon": "^3.1.7",
-    "swagger-autogen": "^2.23.7",
-    "swagger-ui-express": "^5.0.1"
->>>>>>> f0307b44e9f9b4a9427cec832f548cb8bd2b9e42:Medi-Track/backend/package.json
   }
 }

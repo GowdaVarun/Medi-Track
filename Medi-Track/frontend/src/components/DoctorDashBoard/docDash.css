@@ -1,0 +1,94 @@
+/* Background and Container Styles */
+.login-doc-background {
+    background: linear-gradient(to right, #4ccb11, #2575fc); /* Two-color gradient */
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.login-doc-container {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 45px;
+    border-radius: 50px; /* Increased the border radius for a softer look */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Slightly reduced shadow opacity for a more subtle effect */
+    width: 100%;
+    max-width: 950px;
+}
+
+.doc-dashboard-title {
+    color: #6a11cb;
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Button Styles */
+.doc-button-container {
+    display: flex;
+    justify-content: space-evenly; /* Distribute buttons evenly */
+    margin-bottom: 30px; /* Space below buttons */
+    width: 100%;
+}
+
+.doc-dashboard-button-container {
+    margin: 0 10px;
+}
+
+.doc-dashboard-button {
+    background-color: #007bff;
+    color: white;
+    padding: 15px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    width: 200px; /* Ensures all buttons have the same width */
+    margin: 10px; /* Adds spacing between buttons */
+    transition: all 0.3s;
+}
+
+.doc-dashboard-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+
+/* Logout Button */
+.doc-logout-button-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Ensures content is centered vertically if required */
+    width: 100%; /* Ensures it takes up full width for proper centering */
+}
+
+.doc-logout-button {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 12px 70px;
+    font-size: 18px;
+    border-radius: 25px;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.doc-logout-button:hover {
+    background-color: #cc0000;
+    transform: scale(1.05);
+}
+
+/* Footer Text */
+.doc-footer-text {
+    margin-top: 20px;
+    color: #444;
+    font-size: 14px;
+}

@@ -658,7 +658,7 @@ app.delete('/medical-records/:id', async (req, res) => {
 });
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-const PORT = 3000;
+const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server listening on http://127.0.0.1:${PORT}`);
 });
