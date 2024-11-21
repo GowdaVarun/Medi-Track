@@ -655,7 +655,7 @@ app.delete('/medical-records/:id', async (req, res) => {
   }
 });
 
-const PORT = 3001;
+const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server listening on http://127.0.0.1:${PORT}`);
 });
