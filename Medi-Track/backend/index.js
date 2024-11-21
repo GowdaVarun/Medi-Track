@@ -11,8 +11,10 @@ const MedicalRecordModel = require('./models/healthrecords.js');
 const axios = require("axios")
 const { encrypt, decrypt } = require('./encryption'); // Import the encryption functions
 require('dotenv').config(); // Load environment variables from .env file
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger-output.json');
 
-const app = express();
+const app = express();  
 app.use(express.json());
 
 const frontend_url ='http://localhost:5173';
@@ -654,6 +656,7 @@ app.delete('/medical-records/:id', async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const PORT = 3000;
 app.listen(PORT, () => {
