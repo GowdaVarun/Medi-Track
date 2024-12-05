@@ -13,6 +13,9 @@ const { encrypt, decrypt } = require('./encryption'); // Import the encryption f
 require('dotenv').config(); // Load environment variables from .env file
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger-output.json');
+const fileUpload = require("express-fileupload");
+const { db } = require("./Medical_Documents/firebase_config"); // Firestore instance from firebase_config.js
+const { doc, setDoc, getDoc } = require("firebase/firestore");
 
 const app = express();  
 app.use(express.json());
@@ -43,37 +46,64 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 const loginAttempts = new Map();
 
-app.get('/api/medical-documents', async (req, res) => {
+app.use(fileUpload());
+// File retrieval route
+app.get("/api/file/:name", async (req, res) => {
   try {
-    // Fetch medical documents from the database
-    const documents = await MedicalDocumentModel.find();
-    res.json(documents);
+    const fileName = req.params.name;
+
+    // Firestore document reference
+    const fileDoc = doc(db, "files", fileName);
+    const fileSnapshot = await getDoc(fileDoc);
+
+    if (!fileSnapshot.exists()) {
+      return res.status(404).json({ message: "File not found" });
+    }
+
+    const fileData = fileSnapshot.data();
+    const fileBuffer = Buffer.from(fileData.content, "base64"); // Base64 content
+
+    // Send the file as a response
+    res.set({
+      "Content-Type": fileData.type,
+      "Content-Disposition": `attachment; filename=${fileData.name}`,
+    });
+    res.send(fileBuffer);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error retrieving file:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
-app.post('/api/upload', async (req, res) => {
+
+// File upload route
+app.post("/api/upload", async (req, res) => {
   try {
-    if (!req.files || Object.keys(req.files).length === 0) {
-      return res.status(400).json({ message: 'No files were uploaded.' });
+    if (!req.files || !req.files.file) {
+      return res.status(400).json({ message: "No file uploaded" });
     }
 
     const file = req.files.file;
+    const base64File = file.data.toString("base64"); // Convert the file buffer to Base64
+    const metadata = req.body || {}; // Additional metadata from the client
 
-    // Your logic to handle the uploaded file (save it to the server, update the database, etc.)
-    // Example: Save the file to a folder on the server
-    const uploadPath = __dirname + '/uploads/' + file.name;
-    file.mv(uploadPath, function (err) {
-      if (err) {
-        return res.status(500).json({ message: err.message });
-      }
+    // Firestore document reference
+    const fileDoc = doc(db, "files", file.name); // 'files' is the Firestore collection name
 
-      // File uploaded successfully, update the database or send a response
-      res.json({ message: 'File uploaded successfully' });
+    // Save file and metadata to Firestore
+    await setDoc(fileDoc, {
+      name: file.name,
+      type: file.mimetype,
+      size: file.size,
+      content: base64File, // Store the Base64-encoded file content
+      metadata,
+      uploadedAt: new Date().toISOString(),
     });
+
+    res.status(200).json({ message: "File uploaded successfully", fileName: file.name });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error uploading file:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
