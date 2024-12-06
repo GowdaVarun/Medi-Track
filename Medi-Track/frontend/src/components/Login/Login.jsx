@@ -39,6 +39,11 @@ const Login = () => {
             });
     };
 
+    const handleOTPLogin = () => {
+        // Logic for OTP-based login
+        navigate('/otp-login'); // Assuming you have an OTP login page
+    };
+
     useEffect(() => {
         if (showAnimation) {
             setTimeout(() => {
@@ -50,13 +55,11 @@ const Login = () => {
     return (
         <div className="login-background">
             <div className="login-container">
-                <h2 className="login-title">Welcome to Medi-Track</h2>
+                <h2 className="login-title">Welcome to MediTrack</h2>
                 <form onSubmit={handleSubmit}>
-                <div className="input-group mb-3 text-start">
-                        <div className="label-container">
-                            <label htmlFor="email"><strong>Email</strong></label>
-                        </div>
-                        <div className="input-container">
+                    <div className="form-group mb-4">
+                        <label htmlFor="email" className="form-label"><strong>Email</strong></label>
+                        <div>
                             <input
                                 type="email"
                                 placeholder="Enter Email"
@@ -68,11 +71,9 @@ const Login = () => {
                             />
                         </div>
                     </div>
-                    <div className="input-group mb-3 text-start">
-                        <div className="label-container">
-                            <label htmlFor="password">Password</label>
-                        </div>
-                        <div className="input-container">
+                    <div className="form-group mb-4">
+                        <label htmlFor="password" className="form-label"><strong>Password</strong></label>
+                        <div>
                             <input
                                 type="password"
                                 placeholder="Enter Password"
@@ -84,11 +85,9 @@ const Login = () => {
                             />
                         </div>
                     </div>
-                    <div className="input-group mb-3 text-start">
-                        <div className="label-container">
-                            <label htmlFor="role">Role</label>
-                        </div>
-                        <div className="input-container">
+                    <div className="form-group mb-4">
+                        <label htmlFor="role" className="form-label"><strong>Role</strong></label>
+                        <div>
                             <select
                                 className="form-select"
                                 id="role"
@@ -101,27 +100,31 @@ const Login = () => {
                                 <option value="Doctor">Doctor</option>
                             </select>
                         </div>
-                    </div><div className="btn-container">
+                    </div>
                     <button type="submit" className="btn btn-primary w-100">
                         Login
-                    </button></div>
+                    </button>
                 </form>
+                <Link to="/register" className="btn btn-secondary w-100 mt-3">
+                    Register
+                </Link>
+                <button onClick={handleOTPLogin} className="btn btn-outline-primary w-100 mt-3">
+                    Login using OTP
+                </button>
                 {loginError && (
-                    <div className="alert alert-danger" role="alert">
+                    <div className="alert alert-danger mt-3" role="alert">
                         Incorrect Credentials! Please try again.
                     </div>
                 )}
                 {showAnimation && (
-                    <div className="my-3 text-center">
+                    <div className="text-center mt-3">
                         <div className="spinner-border" role="status">
                             <span className="visually-hidden">Loading...</span>
                         </div>
                     </div>
                 )}
-                <Link to="/register" className="btn btn-secondary mt-3">
-                    Register
-                </Link>
-                <p className="mt-3 text-muted">© Medi-Track</p>
+                
+                <p className="mt-3 text-muted">© MediTrack</p>
             </div>
         </div>
     );
