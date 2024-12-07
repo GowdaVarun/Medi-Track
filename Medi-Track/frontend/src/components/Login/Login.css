@@ -1,128 +1,150 @@
-/* Background and Container Styles */
+/* General Background */
+/* General Background */
 .login-background {
-    background: linear-gradient(to right, #4ccb11, #2575fc); /* Two-color gradient */
-    background-size: cover;
-    background-position: center;
+    /*120deg, rgba(106, 17, 203, 0.7), rgba(37, 117, 252, 0.7))*/
+    background: url('/home/varun/varun/DTL/Medi-Track/Medi-Track/frontend/src/assets/loginbackground.jpeg');
+    background-size: cover; /* Ensures the image covers the whole background */
+    background-position: center; /* Centers the image */
     height: 100vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-.login-container {
-    background-color: rgba(255, 255, 255, 0.95);
-    padding: 45px;
-    border-radius: 25px; /* Increased the border radius for a softer look */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Slightly reduced shadow opacity for a more subtle effect */
-    width: 100%;
-    max-width: 450px;
-}
-
-.login-title {
-    color: #6a11cb;
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 25px;
-    text-align: center;
-}
-
-/* Form Input Group Styles */
-.input-group {
-    margin-bottom: 0px; /* Reduced space between input fields */
-}
-
-.label-container {
-    margin-bottom: 0px; /* Reduced gap between label and input */
-    max-height: 6px;
-    text-align: left;
-}
-
-.input-container {
-    width: 100%;
-}
-
-.input-group label {
-    color: #444;
-    font-weight: 600;
-    font-size: 20px;
-    margin-bottom: 5px; /* Reduced gap between label and input */
-    display: block;
-    text-align: left;
-}
-
-.input-group input,
-.input-group select {
-    border-radius: 25px;
-    border: 1px solid #ddd;
-    padding: 12px 18px;
-    font-size: 16px;
-    outline: none;
-    transition: all 0.3s;
-    width: 100%;
-    margin-top: 5px; /* Reduced the margin to bring the input closer to the label */
+    justify-content: center; /* Centers the container horizontally */
+    align-items: center;     /* Centers the container vertically */
+    padding: 20px;
     box-sizing: border-box;
 }
 
-.input-group input:focus,
-.input-group select:focus {
-    border-color: #6a11cb;
-    box-shadow: 0 0 8px rgba(106, 17, 203, 0.2);
-}
 
-/* Button Styles */
-.btn-container {
-    display: flex;
-    justify-content: center; /* Centers the buttons horizontally */
-    width: 100%; /* Ensures full width for the container */
-}
-
-.btn-primary {
-    background-color: #2575fc;
-    border: none;
-    color: white;
-    padding: 12px 160px; /* Adjusted padding for a more consistent button size */
-    border-radius: 25px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-size: 20px; /* Increased font size for better readability */
+/* Login Container */
+.login-container {
+    background-color: rgba(255, 255, 255, 0.95); /* Increased opacity for better contrast */
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
     text-align: center;
-    width: 110%;
+}
+
+/* Title */
+.login-title {
+    color: #333;
+    font-size: 31   px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* Form Group */
+.form-group {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+/* Labels */
+.form-label {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 0.5rem;
+    display: block;
+    color: black !important; /* Force label color to black */
+}
+
+/* Inputs and Dropdowns */
+.form-control,
+.form-select {
+    width: 100%;
+    border-radius: 25px !important; /* Rounded rectangle */
+    padding: 12px 15px !important; /* Adjusted padding for rounded shape */
+    font-size: 14px;
+    border: 1px solid #ddd;
+    transition: all 0.3s ease-in-out;
+    box-sizing: border-box;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #2575fc;
+    box-shadow: 0 0 5px rgba(37, 117, 252, 0.5);
+    outline: none;
+}
+
+/* Buttons */
+.btn-primary {
+    background: #2575fc;
+    border: none;
+    border-radius: 25px !important; /* Rounded button */
+    padding: 15px;
+    font-size: 16px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+    text-align: center;
 }
 
 .btn-primary:hover {
-    background-color: #6a11cb;
-    transform: scale(1.05);
+    background: #6a11cb;
+    transform: translateY(-1px);
 }
 
-.btn-secondary {
-    background-color: #fff;
-    color: #6a11cb;
-    border: 1px solid #6a11cb;
-    padding: 10px 18px;
-    border-radius: 25px;
-    font-weight: bold;
-    text-decoration: none;
-    transition: all 0.3s;
+/* Outline Buttons */
+.btn-outline-primary {
+    border: 1px solid #2575fc;
+    color: #2575fc;
+    border-radius: 25px !important; /* Rounded button */
+    padding: 12px;
     font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+    max-width: 200px;
+}
+
+.btn-outline-primary:hover {
+    background: #2575fc;
+    color: #fff;
+}
+
+/* Register Button */
+.btn-secondary {
+    background: none;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 25px !important; /* Rounded button */
+    padding: 12px;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+    cursor: pointer;
+    max-width: 150px;
 }
 
 .btn-secondary:hover {
-    background-color: #6a11cb;
-    color: white;
-    border-color: #6a11cb;
+    background: #2575fc;
+    color: #fff;
 }
 
-/* Alert Styles */
-.alert {
-    font-size: 14px;
-    border-radius: 10px;
-    margin-top: 20px; /* Increased space above alert */
-}
-
+/* Spinner */
 .spinner-border {
-    width: 30px;
-    height: 30px;
-    color: #6a11cb;
+    color: #2575fc;
+}
+
+/* Additional Styling for Responsiveness */
+@media (max-width: 768px) {
+    .login-container {
+        padding: 30px;
+        margin-right: 20px; /* Adjust space for smaller screens */
+    }
+
+    .login-title {
+        font-size: 24px;
+    }
+
+    .btn-primary,
+    .btn-outline-primary,
+    .btn-secondary {
+        font-size: 14px;
+        padding: 10px;
+    }
 }
