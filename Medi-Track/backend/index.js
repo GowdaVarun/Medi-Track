@@ -15,7 +15,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger-output.json');
 const fileUpload = require("express-fileupload");
 const { db } = require("./Medical_Documents/firebase_config"); // Firestore instance from firebase_config.js
-const { doc, setDoc, getDoc, deleteDoc } = require("firebase/firestore");
+const { doc, setDoc, getDoc, deleteDoc, collection, getDocs } = require("firebase/firestore");
 
 const app = express();  
 app.use(express.json());
@@ -76,37 +76,78 @@ app.get("/api/file/:user/:name", async (req, res) => {
   }
 });
 
+app.get("/api/file/:user", async (req, res) => {
+  try {
+    const userName = req.params.user.toLowerCase();
+
+    // Reference the user's collection
+    const collectionRef = collection(db, "files_" + userName);
+    const fileSnapshot = await getDocs(collectionRef);
+
+    // Check if the collection is empty
+    if (fileSnapshot.empty) {
+      return res.status(404).json({ message: "No files found for the user" });
+    }
+
+    // Retrieve all files and their data
+    const files = [];
+    fileSnapshot.forEach((doc) => {
+      const fileData = doc.data();
+      files.push({
+        name: fileData.name,
+        type: fileData.type,
+        content: fileData.content, // Base64 encoded
+        uploadedAt: fileData.uploadedAt,
+      });
+    });
+
+    // Send files as a response
+    res.status(200).json({ files });
+  } catch (error) {
+    console.error("Error retrieving files:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 // File upload route
 app.post("/api/upload", async (req, res) => {
   try {
+    // Validate file presence
     if (!req.files || !req.files.file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
+    // Validate patient name
+    if (!req.body.name) {
+      return res.status(400).json({ message: "Patient name is required" });
+    }
+
     const file = req.files.file;
-    const base64File = file.data.toString("base64"); // Convert the file buffer to Base64
-    const metadata = req.body || {}; // Additional metadata from the client
-    const userName = (req.body.name);
+    const userName = req.body.name; // Patient name
+    const base64File = file.data.toString("base64");
+
+    console.log("Uploading file for patient:", userName);
+
     // Firestore document reference
-    const fileDoc = doc(db, "files_"+userName, file.name); // 'files' is the Firestore collection name
+    const fileDoc = doc(db, "files_" + userName, file.name);
 
     // Save file and metadata to Firestore
     await setDoc(fileDoc, {
       name: file.name,
       type: file.mimetype,
       size: file.size,
-      content: base64File, // Store the Base64-encoded file content
-      metadata,
+      content: base64File,
       uploadedAt: new Date().toISOString(),
       patientName: userName,
     });
 
-    res.status(200).json({ message: "File uploaded successfully", fileName: file.name,userName: userName });
+    res.status(200).json({ message: "File uploaded successfully", fileName: file.name, userName });
   } catch (error) {
     console.error("Error uploading file:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 app.delete("/api/file/:user/:name",async(req,res)=>{
   try {
@@ -126,6 +167,7 @@ app.delete("/api/file/:user/:name",async(req,res)=>{
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // limit each IP to 5 requests per windowMs

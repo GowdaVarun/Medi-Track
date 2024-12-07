@@ -10,6 +10,7 @@ import HealthRecordPage from './components/HealthRecords/Healthrecords';
 import AppointmentBooking from './components/Appointments/Appointments';
 import MedicalDocuments from './components/MedicalDocuments/MedicalDocuments';
 import Footer from "./components/Footer/Footer"
+import FileDownloader from './components/FileManagement/FileDownloader';
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
           <Route path="/Patients" element ={<PatientsPage/>} />
           <Route path="/Doctors" element ={<DoctorsPage/>} />
           <Route path="/medicaldocuments" element ={<MedicalDocuments/>} />
+          <Route path = "/myfiles" element={<FileDownloader />} />
         </Routes>
       </BrowserRouter>
       <Footer/>
