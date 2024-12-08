@@ -41,7 +41,7 @@ const PatientDashboard = () => {
                 {/* Sidebar */}
                 <div className="sidebar">
                     <div className="patient-dashboard-header">
-                        <h1>Welcome, {patientDetails.name}!</h1>
+                        <h1>Welcome, {patientDetails.name}!!!</h1>
                     </div>
                     <div className="patient-button-container">
                         {navigationButtons.map((button, index) => (
