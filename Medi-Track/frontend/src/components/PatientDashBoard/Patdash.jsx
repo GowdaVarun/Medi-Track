@@ -34,7 +34,7 @@ const PatientDashboard = () => {
     };
 
     return (
-        <div class="welcome-message">Welcome, [Patient Name]
+        <div className="welcome-message">Welcome, [Patient Name]
 
         <div className="patient-dashboard-background">
             <div className="patient-dashboard-wrapper">

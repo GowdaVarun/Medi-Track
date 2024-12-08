@@ -1,12 +1,15 @@
+/* Medical Records Container */
 .medical-records-container {
-  background: #282c34;
+  background: linear-gradient(to right, #4ccb11, #2575fc);
   color: #fff;
   padding: 50px;
   font-family: 'Arial', sans-serif;
   text-align: center;
   min-height: 115vh;
+  border-radius: 15px;
 }
 
+/* Header Section */
 .header {
   margin-bottom: 20px;
 }
@@ -15,21 +18,25 @@
   background-color: #007bff;
   color: #fff;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 25px;
   font-size: 16px;
   cursor: pointer;
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
 }
 
 .header button:hover {
   background-color: #0056b3;
 }
 
+/* Main Heading */
 h1 {
   text-align: center;
   margin-top: 20px;
   color: #fff;
 }
 
+/* Action Buttons */
 .action-buttons {
   display: flex;
   justify-content: flex-end;
@@ -40,15 +47,18 @@ h1 {
   background-color: #28a745;
   color: #fff;
   border: none;
-  padding: 10px 20px;
+  padding: 12px 25px;
   font-size: 16px;
   cursor: pointer;
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
 }
 
 .action-buttons button:hover {
   background-color: #218838;
 }
 
+/* Form Container */
 .form-container {
   background-color: #333;
   padding: 20px;
@@ -57,12 +67,14 @@ h1 {
   margin-top: 20px;
 }
 
+/* Form Title */
 .form-container h2 {
   text-align: center;
   margin-bottom: 20px;
   color: #fff;
 }
 
+/* Form Group */
 .form-group {
   margin-bottom: 15px;
 }
@@ -75,18 +87,19 @@ h1 {
 
 .form-group input {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   font-size: 16px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 20px;
   background-color: #fff;
   color: #333;
 }
 
+/* Table Styles */
 .table {
-  width: 80%; /* Increase the width */
-  margin: 0 auto; /* Center the table horizontally */
-  margin-top: 20px; /* Adjust the top margin */
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 20px;
   border-collapse: collapse;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   color: #333;
@@ -108,10 +121,13 @@ h1 {
   background-color: #fff;
 }
 
+/* Table Button Styles */
 .table button {
   padding: 8px 12px;
   margin-right: 5px;
   cursor: pointer;
+  border-radius: 12px;
+  transition: background-color 0.3s ease;
 }
 
 .table button.btn-info {
