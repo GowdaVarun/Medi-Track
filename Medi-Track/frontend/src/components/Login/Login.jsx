@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ParticlesComponent from '../particles/particles.jsx';
 import './Login.css';
 import { Link } from 'react-router-dom';
 
@@ -54,6 +55,7 @@ const Login = () => {
 
     return (
         <div className="login-background">
+            <ParticlesComponent id="particles"/>
             <div className="login-container">
                 <h2 className="login-title">Welcome to MediTrack</h2>
                 <form onSubmit={handleSubmit}>
