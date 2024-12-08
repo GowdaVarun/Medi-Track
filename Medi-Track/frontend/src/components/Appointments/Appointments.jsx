@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import "./Appointments.css";
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-const patientemail=localStorage.getItem('email');
-const AppointmentBooking = () => {
 
+const AppointmentBooking = () => {
+  const patientemail = localStorage.getItem('email');
   const [formData, setFormData] = useState({
     patientName: '',
     appointmentDate: '',
@@ -14,15 +15,20 @@ const AppointmentBooking = () => {
   });
 
   const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const role = localStorage.getItem('role');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const appointmentsResponse = await axios.get('http://localhost:3001/appointments');
-        setAppointments(appointmentsResponse.data);
+        const response = await axios.get('http://localhost:3001/appointments');
+        setAppointments(response.data);
+        setLoading(false);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        setError('Error fetching data');
+        setLoading(false);
       }
     };
 
@@ -31,30 +37,18 @@ const AppointmentBooking = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleAppointmentBooking = async (e) => {
     e.preventDefault();
-    const email = localStorage.getItem('email');
+    const newAppointment = { ...formData, patientemail };
     try {
-      const newAppointment = { ...formData, patientemail: email };
-      const response = await axios.post('http://localhost:3001/appointments', newAppointment, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      await axios.post('http://localhost:3001/appointments', newAppointment, {
+        headers: { 'Content-Type': 'application/json' },
       });
-
-      console.log('Appointment booked successfully:', response.data);
-
-      // Update the state with the new data
       const updatedAppointments = await axios.get('http://localhost:3001/appointments');
       setAppointments(updatedAppointments.data);
-
-      // Reset form data
       setFormData({
         patientName: '',
         appointmentDate: '',
@@ -68,69 +62,27 @@ const AppointmentBooking = () => {
     }
   };
 
-const handleDeleteAppointment = async (appointmentId) => {
+  const handleDeleteAppointment = async (appointmentId) => {
     try {
-      console.log(`Deleting appointment ${appointmentId}`);
-  
-      // Ensure that appointmentId is not undefined
-      if (!appointmentId) {
-        console.error('Invalid appointmentId:', appointmentId);
-        return;
-      }
-  
-      // Send DELETE request to remove the appointment
       await axios.delete(`http://localhost:3001/appointments/${appointmentId}`);
-  
-      console.log('Appointment deleted successfully');
-  
-      // Update the local state or refetch appointments
       const updatedAppointments = await axios.get('http://localhost:3001/appointments');
       setAppointments(updatedAppointments.data);
     } catch (error) {
       console.error('Error deleting appointment:', error);
     }
-};
-  
-const handleStatusChange = async (appointmentId, newStatus) => {
+  };
+
+  const handleStatusChange = async (appointmentId, newStatus) => {
     try {
-      console.log(`Changing status of appointment ${appointmentId} to ${newStatus}`);
-  
-      // Ensure that appointmentId is not undefined
-      if (!appointmentId) {
-        console.error('Invalid appointmentId:', appointmentId);
-        return;
-      }
-  
-      // Send PUT request to update appointment status
-      await axios.put(`http://localhost:3001/appointments/${appointmentId}`, {...formData,patientemail, status: newStatus });
-  
-      console.log(`Appointment status changed to ${newStatus}`);
-  
-      // Update the local state or refetch appointments
+      await axios.put(`http://localhost:3001/appointments/${appointmentId}`, { status: newStatus });
       const updatedAppointments = await axios.get('http://localhost:3001/appointments');
       setAppointments(updatedAppointments.data);
     } catch (error) {
       console.error('Error changing appointment status:', error);
     }
-};
+  };
 
-const getStatusColor = (status) => {
-  switch (status) {
-    case 'scheduled':
-      return 'blue'; // Set your desired color for scheduled appointments
-    case 'confirmed':
-      return 'green'; // Set your desired color for confirmed appointments
-    case 'canceled':
-      return 'red'; // Set your desired color for canceled appointments
-    case 'completed':
-      return 'gray'; // Set your desired color for completed appointments
-    default:
-      return 'black';
-  }
-};
-
-const handleDashboardClick = () => {
-    const role = localStorage.getItem('role');
+  const handleDashboardClick = () => {
     if (role === 'Admin') {
       navigate('/home');
     } else if (role === 'Patient') {
@@ -140,27 +92,28 @@ const handleDashboardClick = () => {
     }
   };
 
-  let role = localStorage.getItem('role');
-  const email = localStorage.getItem('email');
-  const headingText = role === 'Patient' ? 'Appointments' : role === 'Admin' ? 'Appointment Records' : 'Manage Appointments';
-  
-  const patientUpcomingAppointments = appointments.filter(
-    (appointment) => appointment.patientemail === email
-  );
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'scheduled':
+        return 'blue';
+      case 'confirmed':
+        return 'green';
+      case 'canceled':
+        return 'red';
+      case 'completed':
+        return 'gray';
+      default:
+        return 'black';
+    }
+  };
 
-  //showing appointments for doctors
+  const patientUpcomingAppointments = appointments.filter((appointment) => appointment.patientemail === patientemail);
   const upcomingAppointments = appointments;
+  const userAppointments = role === 'Patient' ? patientUpcomingAppointments : upcomingAppointments;
 
-  let userAppointments;
-  if (role === 'Patient') {
-    userAppointments = patientUpcomingAppointments;
-  } else {
-    userAppointments = upcomingAppointments;
-  }
-  role = localStorage.getItem('role');
   return (
-    <div style={{ background: 'linear-gradient(to right, #232526, #414345)', color: '#ffffff', padding: '20px', height: '100vh', overflowY: 'scroll' }}>
-      <RouterLink to={role == 'Admin' ? '/home' : role == 'Patient' ? '/patdash' : '/docdash'}>
+    <div className='appoint-background'>
+      <RouterLink to={role === 'Admin' ? '/home' : role === 'Patient' ? '/patdash' : '/docdash'}>
         <button
           style={{
             backgroundColor: '#1e1e1e',
@@ -180,198 +133,124 @@ const handleDashboardClick = () => {
           Dashboard
         </button>
       </RouterLink>
-      {role != 'Admin' && role!='Doctor' && (
-      <><h1 style={{ textAlign: 'center', margin: '5px 0 0', color: 'white' }}>{headingText}</h1>
-      <div className="mb-4 p-4" style={{ background: 'rgba(255, 255, 255, 0.2)', borderRadius: '10px', width: '60%', marginLeft: 'auto', marginRight: 'auto', marginTop: '20px' }}>
-        <h3 style={{ color: 'white', marginBottom: '10px', marginTop: '10px' }}>{role === 'Patient' ? ' New Appointment Details' : ' New Appointment Details'}</h3>
-        <form onSubmit={handleAppointmentBooking}>
-          <div className="row">
-            <div className="col">
-              <input
-                type="text"
-                id="patientName"
-                name="patientName"
-                value={formData.patientName}
-                onChange={handleInputChange}
-                placeholder="Patient Name"
-                className="form-control mb-3"
-              />
-                <input
-                type="text"
-                id="appointmentDate"
-                name="appointmentDate"
-                value={formData.appointmentDate}
-                onChange={handleInputChange}
-                placeholder="Appointment Date(DD/MM/YYYY)"
-                className="form-control mb-3"
-              />
-              <input
-                type="text"
-                id="appointmentTime"
-                name="appointmentTime"
-                value={formData.appointmentTime}
-                onChange={handleInputChange}
-                placeholder="Appointment Time(hh:mm)"
-                className="form-control mb-3"
-              />
-            </div>
-            <div className="col">
-              <input
-                type="text"
-                id="age"
-                name="age"
-                value={formData.age}
-                onChange={handleInputChange}
-                placeholder="Age"
-                className="form-control mb-3"
-              />
-              <input
-                type="text"
-                id="gender"
-                name="gender"
-                value={formData.gender}
-                onChange={handleInputChange}
-                placeholder="Gender"
-                className="form-control mb-3"
-              />
-              <input
-                type="text"
-                id="contactNumber"
-                name="contactNumber"
-                value={formData.contactNumber}
-                onChange={handleInputChange}
-                placeholder="Contact Number"
-                className="form-control mb-3"
-              />
-            </div>
-          </div>
-          <button type="submit" className="btn btn-primary" style={{ width: '100%', borderRadius: '10px' }}>
-            {role == 'Patient' ? 'Book Appointment' : 'Add Appointment'}
-          </button>
-        </form>
-      </div>
-      </>
-      )}
-{role == 'Doctor' && (
-  <div style={{ marginTop: '20px' }}>
-    <h2 style={{ textAlign: 'center', color: 'white' }}>Registered Appointments</h2>
-    <table className="table table-striped" style={{ color: 'white' }}>
-      <thead>
-        <tr>
-          <th>Patient Name</th>
-          <th>Appointment Date</th>
-          <th>Appointment Time</th>
-          <th>Age</th>
-          <th>Gender</th>
-          <th>Contact Number</th>
-          <th>Actions</th> {/* Ensure the Actions column is here */}
-        </tr>
-      </thead>
-      <tbody>
-        {userAppointments.map((appointment) => (
-          <tr key={appointment._id}>
-            <td>{appointment.patientName}</td>
-            <td>{appointment.appointmentDate}</td>
-            <td>{appointment.appointmentTime}</td>
-            <td>{appointment.age}</td>
-            <td>{appointment.gender}</td>
-            <td>{appointment.contactNumber}</td>
-            <td>
-              {appointment.status == 'scheduled' && (
-                <>
-                  <button
-                    className="btn btn-success btn-sm mr-2"
-                    onClick={() => handleStatusChange(appointment._id, 'confirmed')}
-                  >
-                    Confirm
-                  </button>
-                  <button
-                    className="btn btn-danger btn-sm mr-2"
-                    onClick={() => handleStatusChange(appointment._id, 'canceled')}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    className="btn btn-secondary btn-sm mr-2"
-                    onClick={() => handleStatusChange(appointment._id, 'completed')}
-                  >
-                    Complete
-                  </button>
-                </>
-              )}
-              <button
-                className="btn btn-warning btn-sm"
-                onClick={() => handleDeleteAppointment(appointment._id)}
-              >
-                Delete
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-)}
-{role == 'Admin' && (
-  <div style={{ marginTop: '20px' }}>
-    <table className="table table-striped" style={{ color: 'white' }}>
-      <thead>
-        <tr>
-          <th>Patient Name</th>
-          <th>Appointment Date</th>
-          <th>Appointment Time</th>
-          <th>Age</th>
-          <th>Gender</th>
-          <th>Contact Number</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {appointments.map((appointment) => (
-          <tr key={appointment._id}>
-            <td>{appointment.patientName}</td>
-            <td>{appointment.appointmentDate}</td>
-            <td>{appointment.appointmentTime}</td>
-            <td>{appointment.age}</td>
-            <td>{appointment.gender}</td>
-            <td>{appointment.contactNumber}</td>
-            <td>
-              {appointment.status == 'scheduled' && (
-                <>
-                  <button className="btn btn-success btn-sm mr-2" onClick={() => handleStatusChange(appointment._id, 'confirmed')}>Confirm</button>
-                  <button className="btn btn-danger btn-sm mr-2" onClick={() => handleStatusChange(appointment._id, 'canceled')}>Cancel</button>
-                  <button className="btn btn-secondary btn-sm mr-2" onClick={() => handleStatusChange(appointment._id, 'completed')}>Complete</button>
-                </>
-              )}
-              <button className="btn btn-warning btn-sm" onClick={() => handleDeleteAppointment(appointment._id)}>Delete</button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-)}
 
-      {/* For Patients: Appointments */}
-      {role == 'Patient' && (
-        <div style={{ marginTop: '20px' }}>
-          {/* Upcoming Appointments */}
-          
+      {role !== 'Admin' && role !== 'Doctor' && (
+        <>
+          <h1 style={{ textAlign: 'center', margin: '5px 0 0', color: 'white' }}>New Appointment Details</h1>
+          <div className="form-container">
+            <form onSubmit={handleAppointmentBooking}>
+              <div className="form-row">
+                <input type="text" name="patientName" value={formData.patientName} onChange={handleInputChange} placeholder="Patient Name" />
+                <input type="text" name="appointmentDate" value={formData.appointmentDate} onChange={handleInputChange} placeholder="Appointment Date" />
+                <input type="text" name="appointmentTime" value={formData.appointmentTime} onChange={handleInputChange} placeholder="Appointment Time" />
+                <input type="text" name="age" value={formData.age} onChange={handleInputChange} placeholder="Age" />
+                <input type="text" name="gender" value={formData.gender} onChange={handleInputChange} placeholder="Gender" />
+                <input type="text" name="contactNumber" value={formData.contactNumber} onChange={handleInputChange} placeholder="Contact Number" />
+                <button type="submit" className="btn-submit">
+                  {role === 'Patient' ? 'Book Appointment' : 'Add Appointment'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </>
+      )}
+
+      {role === 'Doctor' && (
+        <div>
+          <h2 style={{ textAlign: 'center', color: 'white' }}>Registered Appointments</h2>
           <table className="table table-striped" style={{ color: 'white' }}>
             <thead>
               <tr>
-                {/* <th>Doctor Name</th> */}
+                <th>Patient Name</th>
                 <th>Appointment Date</th>
                 <th>Appointment Time</th>
-                <th>Status</th>
-                {/* Add more columns as needed */}
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Contact Number</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {userAppointments.map((appointment) => (
                 <tr key={appointment._id}>
-                  {/* Display relevant appointment information for patients */}
-                  {/* <td>{appointment.doctorName}</td> */}
+                  <td>{appointment.patientName}</td>
+                  <td>{appointment.appointmentDate}</td>
+                  <td>{appointment.appointmentTime}</td>
+                  <td>{appointment.age}</td>
+                  <td>{appointment.gender}</td>
+                  <td>{appointment.contactNumber}</td>
+                  <td>
+                    {appointment.status === 'scheduled' && (
+                      <>
+                        <button className="btn btn-success" onClick={() => handleStatusChange(appointment._id, 'confirmed')}>Confirm</button>
+                        <button className="btn btn-danger" onClick={() => handleStatusChange(appointment._id, 'canceled')}>Cancel</button>
+                        <button className="btn btn-secondary" onClick={() => handleStatusChange(appointment._id, 'completed')}>Complete</button>
+                      </>
+                    )}
+                    <button className="btn btn-warning" onClick={() => handleDeleteAppointment(appointment._id)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {role === 'Admin' && (
+        <div>
+          <h2 style={{ textAlign: 'center', color: 'white' }}>All Appointments</h2>
+          <table className="table table-striped" style={{ color: 'white' }}>
+            <thead>
+              <tr>
+                <th>Patient Name</th>
+                <th>Appointment Date</th>
+                <th>Appointment Time</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Contact Number</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {appointments.map((appointment) => (
+                <tr key={appointment._id}>
+                  <td>{appointment.patientName}</td>
+                  <td>{appointment.appointmentDate}</td>
+                  <td>{appointment.appointmentTime}</td>
+                  <td>{appointment.age}</td>
+                  <td>{appointment.gender}</td>
+                  <td>{appointment.contactNumber}</td>
+                  <td>
+                    {appointment.status === 'scheduled' && (
+                      <>
+                        <button className="btn btn-success" onClick={() => handleStatusChange(appointment._id, 'confirmed')}>Confirm</button>
+                        <button className="btn btn-danger" onClick={() => handleStatusChange(appointment._id, 'canceled')}>Cancel</button>
+                        <button className="btn btn-secondary" onClick={() => handleStatusChange(appointment._id, 'completed')}>Complete</button>
+                      </>
+                    )}
+                    <button className="btn btn-warning" onClick={() => handleDeleteAppointment(appointment._id)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {role === 'Patient' && (
+        <div>
+          <h2 style={{ textAlign: 'center', color: 'white' }}>Upcoming Appointments</h2>
+          <table className="table table-striped" style={{ color: 'white' }}>
+            <thead>
+              <tr>
+                <th>Appointment Date</th>
+                <th>Appointment Time</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {userAppointments.map((appointment) => (
+                <tr key={appointment._id}>
                   <td>{appointment.appointmentDate}</td>
                   <td>{appointment.appointmentTime}</td>
                   <td>{appointment.status}</td>
