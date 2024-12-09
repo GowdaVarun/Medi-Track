@@ -176,7 +176,7 @@ const loginLimiter = rateLimit({
 });
 
 app.post('/patients', async (req, res) => {
-  const { firstname, lastname, age, regDate, contact, disease,email,password } = req.body;
+  const { firstname, lastname, age, regDate, contact, disease,email,password,gender,bloodGroup,address,currentMedications } = req.body;
   try {
     const hashedPassword = await crypto.createHash('sha256').update(password).digest('hex');
     const encryptedPatient = {
@@ -188,7 +188,11 @@ app.post('/patients', async (req, res) => {
       disease: encrypt(disease),
       role: 'Patient',
       password: hashedPassword,
-      email: email
+      email: email,
+      currentMedications: encrypt(currentMedications),
+      address: encrypt(address),
+      bloodGroup: encrypt(bloodGroup),
+      gender: encrypt(gender),
 
     };
 
@@ -215,9 +219,17 @@ app.get('/patients', async (req, res) => {
       regDate: decrypt(patient.regDate),
       contact: decrypt(patient.contact),
       disease: decrypt(patient.disease),
+      currentMedications: decrypt(patient.currentMedications),
+      address: decrypt(patient.address),
+      bloodGroup: decrypt(patient.bloodGroup),
+      gender: decrypt(patient.gender),
+      weight: decrypt(patient.weight),
+      height: decrypt(patient.height),
+      dob: decrypt(patient.dob)
     }));
     res.json(decryptedPatients);
   } catch (err) {
+    
     res.status(500).json({ message: err.message });
   }
 });
@@ -233,7 +245,7 @@ app.get('/myentries', async (req, res) => {
         { "email": patientemail },
         { "disease": {$ne:''} } // Checks that 'disease' is not an empty string
       ]
-    });   
+    });
 
     // Decrypt patient information
     const decryptedPatients = patients.map(patient => ({
@@ -252,6 +264,35 @@ app.get('/myentries', async (req, res) => {
   }
 });
 
+app.get('/mydetails', async (req, res) => {
+  try {
+    const { patientemail } = req.query; // Get patientemail from query params
+    
+    // Find patients with matching first or last name (or both if you prefer)
+    const patient = await PatientModel.find({
+      "email": patientemail 
+    });
+    
+    // Decrypt patient information
+    const decryptedPatients = {
+      _id: patient[0]._id,
+      firstname: decrypt(patient[0].firstname),
+      // lastname: decrypt(patient.lastname),
+      age: decrypt(patient[0].age),
+      // regDate: decrypt(patient.regDate),
+      email: patient[0].email,
+      contact: decrypt(patient[0].contact),
+      // disease: decrypt(patient.disease),
+      currentMedications: decrypt(patient[0].currentMedications),
+      address: decrypt(patient[0].address),
+      bloodGroup: decrypt(patient[0].bloodGroup),
+      gender: decrypt(patient[0].gender),
+    };
+    res.json(decryptedPatients);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 app.put('/patients/:id', async (req, res) => {
   const { id } = req.params;
@@ -270,6 +311,10 @@ app.put('/patients/:id', async (req, res) => {
       regDate: decrypt(existingPatient.regDate),
       contact: decrypt(existingPatient.contact),
       disease: decrypt(existingPatient.disease),
+      currentMedications: decrypt(patient.currentMedications),
+      address: decrypt(patient.address),
+      bloodGroup: decrypt(patient.bloodGroup),
+      gender: decrypt(patient.gender),
     };
 
     // Update the patient information
@@ -282,6 +327,10 @@ app.put('/patients/:id', async (req, res) => {
         regDate: encrypt(regDate || decryptedPatient.regDate),
         contact: encrypt(contact || decryptedPatient.contact),
         disease: encrypt(disease),
+        currentMedications: encrypt(decryptedPatient.currentMedications ),
+        address: encrypt(decryptedPatient.address ),
+        bloodGroup: encrypt(decryptedPatient.bloodGroup ),
+        gender: encrypt(decryptedPatient.gender ),
       },
       { new: true }
     );
@@ -292,6 +341,10 @@ app.put('/patients/:id', async (req, res) => {
       regDate: decrypt(updatedPatient.regDate),
       contact: decrypt(updatedPatient.contact),
       disease: decrypt(updatedPatient.disease),
+      currentMedications: decrypt(updatedPatient.currentMedications),
+      address: decrypt(updatedPatient.address),
+      bloodGroup: decrypt(updatedPatient.bloodGroup),
+      gender: decrypt(updatedPatient.gender),
     };
     res.json(decryptedPatient);
   } catch (err) {
@@ -346,6 +399,30 @@ app.get('/appointments', async (req, res) => {
       status: appointment.status
     }));
     res.json(decryptedAppointments);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+app.get('/myappointments', async (req, res) => {
+  try {
+    const { patientemail } = req.query; // Get patientemail from query params
+    
+    // Find patient appointments with matching email
+    const appointments = await AppointmentModel.find({
+      $and: [
+        { "patientemail": patientemail },
+        { "status": "scheduled" } // Checks 'scheduled appointments'
+      ]
+  });
+    // Decrypt appointment information before sending it to the client
+    const decryptedAppointments = appointments.map(appointment => ({
+      _id: appointment._id,
+      appointmentDate: decrypt(appointment.appointmentDate),
+      appointmentTime: decrypt(appointment.appointmentTime),
+      status: appointment.status
+    }));
+    res.json(decryptedAppointments[0]);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -485,18 +562,24 @@ app.post('/register', loginLimiter, async (req, res) => {
         contact : encrypt(contact)
       });
     } else if (role === 'Patient') {
-      const { firstname, lastname, age, regDate, contact } = req.body;
+      const { firstname, lastname, age, regDate, contact,height,weight,dob,address,bloodGroup,gender} = req.body;
       newUser = new PatientModel({
         name : encrypt(name),
         email : email,
         password: hashedPassword,
-        role : encrypt(role),
+        role : role,
         firstname : encrypt(firstname),
         lastname : encrypt(lastname),
         age : encrypt(age),
         regDate : encrypt(regDate),
         contact : encrypt(contact),
         disease: '',
+        gender: encrypt(gender),
+        bloodGroup: encrypt(bloodGroup),
+        height: encrypt(height),
+        weight: encrypt(weight),
+        dob: encrypt(dob),
+        address: encrypt(address),
       });
     } else {
       newUser = new FormDataModel({
