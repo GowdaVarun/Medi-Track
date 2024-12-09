@@ -55,7 +55,7 @@ const Login = () => {
 
     return (
         <div className="login-background">
-            <ParticlesComponent id="particles"/>
+            {/* /<ParticlesComponent id="particles"/> */}
             <div className="login-container">
                 <h2 className="login-title">Welcome to MediTrack</h2>
                 <form onSubmit={handleSubmit}>

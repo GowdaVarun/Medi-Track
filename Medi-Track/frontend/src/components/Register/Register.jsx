@@ -15,6 +15,12 @@ const Register = () => {
   const [lastname, setLastname] = useState('');
   const [age, setAge] = useState('');
   const [regDate, setRegDate] = useState('');
+  const [gender, setGender] = useState('');
+  const [dob, setDOB] = useState('');
+  const [bloodgroup, setBloodGroup] = useState('');
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
+  const [address, setAddress] = useState('');
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [registrationError, setRegistrationError] = useState(false);
   const [registrationFailed, setRegistrationFailed] = useState(false);
@@ -232,6 +238,104 @@ const Register = () => {
                       id="regDate" 
                       value={regDate} 
                       onChange={(e) => setRegDate(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div>
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="gender"><strong>Gender</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <select 
+                      className="form-control" 
+                      id="gender" 
+                      value={gender} 
+                      onChange={(e) => setGender(e.target.value)} 
+                      required 
+                    >
+                      <option value="" disabled>Select Gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="dob"><strong>Date Of Birth</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="text" 
+                      placeholder="Date Of Birth" 
+                      className="form-control" 
+                      id="dob" 
+                      value={dob} 
+                      onChange={(e) => setDOB(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div>  
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="bloodgroup"><strong>Blood Group</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="text" 
+                      placeholder="Blood Group" 
+                      className="form-control" 
+                      id="bloodgroup" 
+                      value={bloodgroup} 
+                      onChange={(e) => setBloodGroup(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div>
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="height"><strong>Height</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="text" 
+                      placeholder="Height in cm" 
+                      className="form-control" 
+                      id="height" 
+                      value={height} 
+                      onChange={(e) => setHeight(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div>
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="weight"><strong>Weight</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="text" 
+                      placeholder="Weight in Kgs" 
+                      className="form-control" 
+                      id="weight" 
+                      value={weight} 
+                      onChange={(e) => setWeight(e.target.value)} 
+                      required 
+                    />
+                  </div>
+                </div>
+                <div className="input-group mb-3 text-start">
+                  <div className="label-container">
+                    <label htmlFor="address"><strong>Address</strong></label>
+                  </div>
+                  <div className="input-container">
+                    <input 
+                      type="text" 
+                      placeholder="Address" 
+                      className="form-control" 
+                      id="address" 
+                      value={address} 
+                      onChange={(e) => setAddress(e.target.value)} 
                       required 
                     />
                   </div>
