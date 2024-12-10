@@ -146,8 +146,8 @@ const AppointmentBooking = () => {
             fontWeight: 'bold',
             outline: 'none',
             transition: 'border-color 0.3s ease-out',
-            marginTop: '60px',
-            marginLeft: '10px',
+            marginTop: '80px',
+            marginLeft: '30px',
           }}
           onClick={handleDashboardClick}
         >
@@ -177,8 +177,8 @@ const AppointmentBooking = () => {
       )}
 
       {role === 'Doctor' && (
-        <div>
-          <h2 style={{ textAlign: 'center', color: "blue" , fontSize: "36px" }}>Registered Appointments</h2>
+        <div className='registered-container'> 
+          <h2 style={{ textAlign: 'center', color: "blue" , fontSize: "48px" }}>Registered Appointments</h2>
           <table className="table table-striped" style={{ color: 'white' }}>
             <thead>
               <tr>
@@ -203,12 +203,12 @@ const AppointmentBooking = () => {
                   <td>
                     {appointment.status === 'scheduled' && (
                       <>
-                        <button className="btn btn-success" onClick={() => handleStatusChange(appointment._id, 'confirmed')}>Confirm</button>
-                        <button className="btn btn-danger" onClick={() => handleStatusChange(appointment._id, 'canceled')}>Cancel</button>
-                        <button className="btn btn-secondary" onClick={() => handleStatusChange(appointment._id, 'completed')}>Complete</button>
+                        <button className="button-confirm" onClick={() => handleStatusChange(appointment._id, 'confirmed')}>Confirm</button>
+                        <button className="button-cancel" onClick={() => handleStatusChange(appointment._id, 'canceled')}>Cancel</button>
+                        <button className="button-complete" onClick={() => handleStatusChange(appointment._id, 'completed')}>Complete</button>
                       </>
                     )}
-                    <button className="btn btn-warning" onClick={() => handleDeleteAppointment(appointment._id)}>Delete</button>
+                    <button className="button-delete" onClick={() => handleDeleteAppointment(appointment._id)}>Delete</button>
                   </td>
                 </tr>
               ))}
@@ -218,7 +218,7 @@ const AppointmentBooking = () => {
       )}
 
       {role === 'Admin' && (
-        <div>
+        <div className="all-appoint-container">
           <h2 style={{ textAlign: 'center', color: "blue" , fontSize: "36px" }}>All Appointments</h2>
           <table className="table table-striped" style={{ color: 'white' }}>
             <thead>
@@ -244,12 +244,12 @@ const AppointmentBooking = () => {
                   <td>
                     {appointment.status === 'scheduled' && (
                       <>
-                        <button className="btn btn-success" onClick={() => handleStatusChange(appointment._id, 'confirmed')}>Confirm</button>
-                        <button className="btn btn-danger" onClick={() => handleStatusChange(appointment._id, 'canceled')}>Cancel</button>
-                        <button className="btn btn-secondary" onClick={() => handleStatusChange(appointment._id, 'completed')}>Complete</button>
+                        <button className="button-confirm" onClick={() => handleStatusChange(appointment._id, 'confirmed')}>Confirm</button>
+                        <button className="button-cancel" onClick={() => handleStatusChange(appointment._id, 'canceled')}>Cancel</button>
+                        <button className="button-complete" onClick={() => handleStatusChange(appointment._id, 'completed')}>Complete</button>
                       </>
                     )}
-                    <button className="btn btn-warning" onClick={() => handleDeleteAppointment(appointment._id)}>Delete</button>
+                    <button className="button-delete" onClick={() => handleDeleteAppointment(appointment._id)}>Delete</button>
                   </td>
                 </tr>
               ))}

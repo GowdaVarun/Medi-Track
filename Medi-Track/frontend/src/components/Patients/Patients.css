@@ -1,0 +1,23 @@
+h2{
+    color: blue;
+}
+
+h3{
+    color: black;
+}
+
+.form-control-search{
+    max-width: 100px;
+}
+
+.edit-button{
+    background: yellow !important;
+}
+
+.delete-button{
+    background: red;
+}
+
+.save-button{
+    background:green;
+}

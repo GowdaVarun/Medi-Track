@@ -11,18 +11,18 @@ const Dashboard = () => {
     ];
 
     return (
-        <div className="dashboard-container">
-            <h1 className="dashboard-title">Welcome to Medi-Track Admin Dashboard!</h1>
-            <div className="button-container">
+        <div className="admin-dashboard-container">
+            <h1 className="admin-dashboard-title">Welcome to Medi-Track Admin Dashboard!</h1>
+            <div className="admin-button-container">
                 {navigationButtons.map((button, index) => (
-                    <Link key={index} to={button.link} className="btn btn-primary">
+                    <Link key={index} to={button.link} className="admin-btn">
                         {button.name}
                     </Link>
                 ))}
             </div>
             <Link
                 to="/login"
-                className="btn btn-secondary logout-btn"
+                className="admin-logout-btn"
             >
                 Logout
             </Link>

@@ -138,7 +138,7 @@ const MedicalRecords = () => {
   // Upload a new file
   const handleUpload = async () => {
     if (!patientName || !selectedFile) {
-      alert("Please enter a patient name and select a file to upload");
+      alert("Please select a file to upload");
       return;
     }
   
@@ -446,10 +446,10 @@ const MedicalRecords = () => {
                   onChange={handleFileChange}
                   style={{ fontSize: "16px", marginRight: "10px" }}
                 />
-                <button onClick={handleUpload} style={{marginTop:"10px", padding: "8px 16px", fontSize: "16px" ,backgroundColor:"#28a745",color: "#fff",border: "none", padding: "12px 25px",
-  fontSize: "16px",  cursor: "pointer",  borderRadius: "20px"}}>
-                  Upload
-                </button>              
+                <button onClick={handleUpload} className="upload-button">
+                    Upload
+                </button>
+            
             </div>
             <button
               className="btn btn-primary"
