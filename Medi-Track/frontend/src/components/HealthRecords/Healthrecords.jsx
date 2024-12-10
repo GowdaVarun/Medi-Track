@@ -20,6 +20,8 @@ const MedicalRecords = () => {
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [patients, setPatients] = useState([]);
+  const [diseasetype, setDiseaseType] = useState('');
+  const [diseases, setDiseases] = useState([]);
 
   useEffect(() => {
     let isMounted = true;
@@ -53,49 +55,46 @@ const MedicalRecords = () => {
   const handleFormSubmit = async () => {
     try {
       //fetch patients
-    const fetchPatients = async () => {
-      try {
-        const role = localStorage.getItem('role');
-        const email = localStorage.getItem('email');
-        let result;
-        if (role === 'Admin'|| role === 'Doctor') {
-          result = await axios.get('http://localhost:3001/patients');
-        } else if (role === 'Patient') {
-          result = await axios.get('http://localhost:3001/myentries', {
-            params: { patientemail: email },
-          });
+      const fetchPatients = async () => {
+        try {
+          const role = localStorage.getItem('role');
+          const email = localStorage.getItem('email');
+          let result;
+          if (role === 'Admin' || role === 'Doctor') {
+            result = await axios.get('http://localhost:3001/patients');
+          } else if (role === 'Patient') {
+            result = await axios.get('http://localhost:3001/myentries', {
+              params: { patientemail: email },
+            });
+          }
+          setPatients(result.data);
+        } catch (error) {
+          console.error('Error fetching patients:', error);
         }
-        console.log("patients in result.data",result.data);
-        setPatients(result.data);
-        console.log("patients in patients variable",patients);
-      } catch (error) {
-        console.error('Error fetching patients:', error);
-      }
-    };
-    fetchPatients();
-    const filteredpatient = patients.filter(
-      (patient) => patient.contact === formData.contact
-    );
-    console.log("filtered patient[0]=> ",filteredpatient[0]);
-    
-    if(filteredpatient){
-      if (isEditMode) {
-        await axios.put(
-          `http://localhost:3001/medical-records/${selectedRecord._id}`,
-          {
+      };
+      fetchPatients();
+      const filteredpatient = patients.filter(
+        (patient) => patient.contact === formData.contact
+      );
+
+      if (filteredpatient.length > 0) {
+        if (isEditMode) {
+          await axios.put(
+            `http://localhost:3001/medical-records/${selectedRecord._id}`,
+            {
+              ...formData,
+              patientName: filteredpatient[0].firstname,
+            }
+          );
+        } else {
+          await axios.post("http://localhost:3001/medical-records", {
             ...formData,
             patientName: filteredpatient[0].firstname,
-          }
-        );
+          });
+        }
       } else {
-        await axios.post("http://localhost:3001/medical-records", {
-          ...formData,
-          patientName: filteredpatient[0].firstname,
-        });
+        console.error("Could not find patient with given contact number");
       }
-    }else{
-      console.error("Couldnot find patient with given contact number");
-    }
       const response = await axios.get("http://localhost:3001/medical-records");
       setRecords(response.data);
       setShowForm(false);
@@ -134,7 +133,7 @@ const MedicalRecords = () => {
         const role = localStorage.getItem('role');
         const email = localStorage.getItem('email');
         let result;
-        if (role === 'Admin'|| role === 'Doctor') {
+        if (role === 'Admin' || role === 'Doctor') {
           result = await axios.get('http://localhost:3001/patients');
         } else if (role === 'Patient') {
           result = await axios.get('http://localhost:3001/myentries', {
@@ -142,8 +141,6 @@ const MedicalRecords = () => {
           });
         }
         setPatients(result.data);
-        console.log("patients",result.data);
-        console.log("patients",patients);
       } catch (error) {
         console.error('Error fetching patients:', error);
       }
@@ -163,6 +160,20 @@ const MedicalRecords = () => {
     }
   };
 
+  const handleDiseaseTypeChange = (e) => {
+    const type = e.target.value;
+    setDiseaseType(type);
+
+    // Set diseases based on disease type
+    if (type === "Acute Disease") {
+      setDiseases(["Flu", "Pneumonia", "Gastroenteritis"]);
+    } else if (type === "Severe Disease") {
+      setDiseases(["Cancer", "Heart Disease", "Chronic Kidney Disease"]);
+    } else {
+      setDiseases([]);
+    }
+  };
+
   return (
     <div className="medical-records-container">
       <div className="header">
@@ -176,11 +187,11 @@ const MedicalRecords = () => {
           }
           style={{ position: "absolute", top: "20px", left: "20px" }}
         >
-          <button className="btn btn-primary">Dashboard</button>
+          <button className="btn btn-primary" style={{fontSize:"20px"}}>Dashboard</button>
         </Link>
       </div>
 
-      <h1 style={{ display: "block", textAlign: "center", marginTop: "70px" }}>
+      <h1 style={{ display: "block", textAlign: "center", marginTop: "70px" ,color: "darkblue",fontSize: "50px"}}>
         Medical Records
       </h1>
 
@@ -188,6 +199,7 @@ const MedicalRecords = () => {
         <button
           className="btn btn-success"
           onClick={() => setShowForm((prevShowForm) => !prevShowForm)}
+          style={{fontSize:"20px", width:"15%"}}
         >
           {showForm ? "Hide Form" : "Add Medical Record"}
         </button>
@@ -195,19 +207,37 @@ const MedicalRecords = () => {
 
       {showForm && (
         <div className="form-container">
-          <h2>
+          <p>
+            <h1>
             {isEditMode ? "Edit Medical Record" : "Add New Medical Record"}
-          </h2>
+            </h1>
           <form>
             <div className="form-group">
+              <label>Disease Type:</label>
+              <select
+                value={diseasetype}
+                onChange={handleDiseaseTypeChange}
+              >
+                <option value="" disabled>Select type</option>
+                <option value="Acute Disease">Acute Disease</option>
+                <option value="Severe Disease">Severe Disease</option>
+              </select>
+            </div>
+            <div className="form-group">
               <label>Diagnosis:</label>
-              <input
-                type="text"
+              <select
                 value={formData.diagnosis}
                 onChange={(e) =>
                   handleFormFieldChange("diagnosis", e.target.value)
                 }
-              />
+              >
+                <option value="" disabled>Select Diagnosis</option>
+                {diseases.map((disease, index) => (
+                  <option key={index} value={disease}>
+                    {disease}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="form-group">
               <label>Treatment Plan:</label>
@@ -287,6 +317,7 @@ const MedicalRecords = () => {
               {isEditMode ? "Save Changes" : "Add Medical Record"}
             </button>
           </form>
+          </p> 
         </div>
       )}
 
@@ -315,26 +346,22 @@ const MedicalRecords = () => {
               <td>{record.attendingDoctor}</td>
               <td>{record.labResults}</td>
               <td>{record.followUpDate}</td>
-              <td>{record.contact}</td>
-              <td>
-                {/* Conditionally render the Edit and Delete buttons based on user role */}
-                {localStorage.getItem("role") !== "Patient" && (
-                  <>
-                    <button
-                      className="btn btn-info"
-                      onClick={() => handleEditRecord(record)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDeleteRecord(record._id)}
-                    >
-                      Delete
-                    </button>
-                  </>
-                )}
-              </td>
+              {localStorage.getItem('role') !== 'Patient' && (
+                <td>
+                  <button
+                    className="btn btn-warning"
+                    onClick={() => handleEditRecord(record)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDeleteRecord(record._id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

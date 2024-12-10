@@ -116,9 +116,9 @@ const AppointmentBooking = () => {
       <RouterLink to={role === 'Admin' ? '/home' : role === 'Patient' ? '/patdash' : '/docdash'}>
         <button
           style={{
-            backgroundColor: '#1e1e1e',
+            backgroundColor: "blue",
             color: '#ffffff',
-            border: '2px solid #1e1e1e',
+            fontSize : "22px",
             padding: '10px 15px',
             borderRadius: '10px',
             cursor: 'pointer',
@@ -136,7 +136,7 @@ const AppointmentBooking = () => {
 
       {role !== 'Admin' && role !== 'Doctor' && (
         <>
-          <h1 style={{ textAlign: 'center', margin: '5px 0 0', color: 'white' }}>New Appointment Details</h1>
+          <h1 style={{ textAlign: 'center', margin: '5px 0 0', color: "darkblue" ,fontSize : "42px"}}>New Appointment Details</h1>
           <div className="form-container">
             <form onSubmit={handleAppointmentBooking}>
               <div className="form-row">
@@ -157,7 +157,7 @@ const AppointmentBooking = () => {
 
       {role === 'Doctor' && (
         <div>
-          <h2 style={{ textAlign: 'center', color: 'white' }}>Registered Appointments</h2>
+          <h2 style={{ textAlign: 'center', color: "blue" , fontSize: "36px" }}>Registered Appointments</h2>
           <table className="table table-striped" style={{ color: 'white' }}>
             <thead>
               <tr>
@@ -198,7 +198,7 @@ const AppointmentBooking = () => {
 
       {role === 'Admin' && (
         <div>
-          <h2 style={{ textAlign: 'center', color: 'white' }}>All Appointments</h2>
+          <h2 style={{ textAlign: 'center', color: "blue" , fontSize: "36px" }}>All Appointments</h2>
           <table className="table table-striped" style={{ color: 'white' }}>
             <thead>
               <tr>
@@ -239,7 +239,7 @@ const AppointmentBooking = () => {
 
       {role === 'Patient' && (
         <div>
-          <h2 style={{ textAlign: 'center', color: 'white' }}>Upcoming Appointments</h2>
+          <h2 style={{ textAlign: 'center', color: "blue" , fontSize: "36px"}}>Upcoming Appointments</h2>
           <table className="table table-striped" style={{ color: 'white' }}>
             <thead>
               <tr>

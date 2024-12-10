@@ -7,7 +7,7 @@ body {
 }
 
 .appoint-background{
-  background: 'linear-gradient(to right, #232526, #414345)';
+  background-color: #faf2e4;
   padding: '20px';
   height: '100vh';
 }
@@ -25,7 +25,7 @@ body {
 .form-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 18px;
   justify-content: center;
 }
 

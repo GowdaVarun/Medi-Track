@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState,useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Patdash.css';
 import { FaUserCircle, FaPhone, FaCalendar, FaPills, FaHospital } from 'react-icons/fa'; // Added more icons
-
+import axios from "axios";
 const PatientDashboard = () => {
     const navigationButtons = [
         { name: 'My Medical Records', link: '/healthrecords' },
@@ -10,38 +10,64 @@ const PatientDashboard = () => {
         { name: 'My Entries', link: '/patients' },
         { name: 'Find Doctors', link: '/doctors' },
     ];
+    const [patientDetails,setPatients] = useState({
+        firstname: "",
+        age: "",
+        gender: "",
+        bloodGroup: "",
+        address: "",
+        email: "",
+        contact: "",
+        emergencyContact: "",
+        lastVisit: "",
+        allergies: "",
+        currentMedications: "",
+    });
+    
+    useEffect(() => {
+        const fetchPatients = async () => {
+          try {
+            const role = localStorage.getItem('role');
+            const email = localStorage.getItem('email');
+            let result;
+            result = await axios.get('http://localhost:3001/mydetails', {
+                params: { patientemail: email },
+            });
+            setPatients(result.data);
+            console.log("patients",patientDetails);
+          } catch (error) {
+            console.error('Error fetching patients:', error);
+          }
+        };
+        fetchPatients();
+      }, []);
+      const [myappointments, setMyAppointments] = useState({
+        appointmentDate: '',
+        appointmentTime: '',
+        status: '',
+      });
 
-    // Enhanced patient details with additional information
-    const patientDetails = {
-        name: "John Doe",
-        age: 30,
-        gender: "Male",
-        bloodGroup: "O+",
-        address: "123 Wellness Street, MediCity",
-        email: "johndoe@example.com",
-        contact: "+1 234 567 8900",
-        emergencyContact: "+1 234 567 8900",
-        lastVisit: "November 15, 2024",
-        primaryPhysician: "Dr. Sarah Smith",
-        allergies: "None",
-        currentMedications: ["Vitamin D", "Omega-3"],
-        nextAppointment: {
-            date: "December 5, 2024",
-            department: "General Check-up",
-            doctor: "Dr. Sarah Smith",
-            time: "10:30 AM"
-        }
-    };
-
+      useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await axios.get('http://localhost:3001/myappointments',{params: {patientemail: localStorage.getItem('email')},});
+            setMyAppointments(response.data);
+          } catch (error) {
+            setError('Error fetching data');
+          }
+        };
+    
+        fetchData();
+      }, []);
     return (
-        <div className="welcome-message">Welcome, [Patient Name]
+        <div className="welcome-message">Welcome, {patientDetails.firstname}
 
         <div className="patient-dashboard-background">
             <div className="patient-dashboard-wrapper">
                 {/* Sidebar */}
                 <div className="sidebar">
                     <div className="patient-dashboard-header">
-                        <h1>Welcome, {patientDetails.name}!!!</h1>
+                        <h1>Welcome, {patientDetails.firstname}!!!</h1>
                     </div>
                     <div className="patient-button-container">
                         {navigationButtons.map((button, index) => (
@@ -61,7 +87,7 @@ const PatientDashboard = () => {
                     <div className="patient-info-grid">
                         <div className="info-card">
                             <h3><FaUserCircle className="card-icon" /> Personal Information</h3>
-                            <p><strong>Name:</strong> {patientDetails.name}</p>
+                            <p><strong>Name:</strong> {patientDetails.firstname}</p>
                             <p><strong>Age:</strong> {patientDetails.age}</p>
                             <p><strong>Gender:</strong> {patientDetails.gender}</p>
                             <p><strong>Blood Group:</strong> {patientDetails.bloodGroup}</p>
@@ -71,26 +97,15 @@ const PatientDashboard = () => {
                             <p><strong>Address:</strong> {patientDetails.address}</p>
                             <p><strong>Email:</strong> {patientDetails.email}</p>
                             <p><strong>Contact:</strong> {patientDetails.contact}</p>
-                            <p><strong>Emergency Contact:</strong> {patientDetails.emergencyContact}</p>
                         </div>
                     </div>
-
-                    {/* Medical Summary */}
-                    <div className="medical-summary">
-                        <h3><FaHospital className="card-icon" /> Medical Summary</h3>
-                        <p><strong>Last Visit:</strong> {patientDetails.lastVisit}</p>
-                        <p><strong>Primary Physician:</strong> {patientDetails.primaryPhysician}</p>
-                        <p><strong>Allergies:</strong> {patientDetails.allergies}</p>
-                        <p><strong>Current Medications:</strong> {patientDetails.currentMedications.join(", ")}</p>
-                    </div>
-
                     {/* Upcoming Appointments */}
                     <div className="upcoming-appointments">
                         <h3><FaCalendar className="card-icon" /> Upcoming Appointments</h3>
-                        <p><strong>Next Visit:</strong> {patientDetails.nextAppointment.date}</p>
-                        <p><strong>Department:</strong> {patientDetails.nextAppointment.department}</p>
-                        <p><strong>Doctor:</strong> {patientDetails.nextAppointment.doctor}</p>
-                        <p><strong>Time:</strong> {patientDetails.nextAppointment.time}</p>
+                        <p><strong>Next Visit:</strong> {myappointments.appointmentDate}</p>
+                        {/* <p><strong>Department:</strong> {patientDetails.nextAppointment.department}</p>
+                        <p><strong>Doctor:</strong> {patientDetails.nextAppointment.doctor}</p> */}
+                        <p><strong>Time:</strong> {myappointments.appointmentTime}</p>
                     </div>
                 </div>
 

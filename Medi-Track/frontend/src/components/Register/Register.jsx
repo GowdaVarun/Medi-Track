@@ -17,7 +17,7 @@ const Register = () => {
   const [regDate, setRegDate] = useState('');
   const [gender, setGender] = useState('');
   const [dob, setDOB] = useState('');
-  const [bloodgroup, setBloodGroup] = useState('');
+  const [bloodGroup, setBloodGroup] = useState('');
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
   const [address, setAddress] = useState('');
@@ -35,7 +35,7 @@ const Register = () => {
     if (role === 'Doctor' || role === 'Admin') {
       registrationData = { ...registrationData, name, specialization, location, contact };
     } else if (role === 'Patient') {
-      registrationData = { ...registrationData, firstname, lastname, age, regDate, contact };
+      registrationData = { ...registrationData, firstname, lastname, age, regDate, contact,dob,weight,height,gender,bloodGroup,address};
     }
 
     axios.post(`${backend_url}/register`, registrationData)
@@ -286,7 +286,7 @@ const Register = () => {
                       placeholder="Blood Group" 
                       className="form-control" 
                       id="bloodgroup" 
-                      value={bloodgroup} 
+                      value={bloodGroup} 
                       onChange={(e) => setBloodGroup(e.target.value)} 
                       required 
                     />
