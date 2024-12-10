@@ -22,7 +22,119 @@ const MedicalRecords = () => {
   const [patients, setPatients] = useState([]);
   const [diseasetype, setDiseaseType] = useState('');
   const [diseases, setDiseases] = useState([]);
+  const [activeTable, setActiveTable] = useState(null);
+  const [activeButton, setActiveButton] = useState(null);
+  const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
 
+  
+  const fetchFiles = async () => {
+    if (!patientName) {
+      alert("Please enter a patient name");
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await fetch(`http://localhost:3001/api/file/${patientName}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch files for the patient");
+      }
+      const data = await response.json();
+      setFiles(data.files || []); // Assuming response contains { files: [...] }
+    } catch (error) {
+      console.error("Error fetching files:", error);
+      alert("Error fetching files. Ensure the patient name is correct.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Download a specific file
+  const handleDownload = async (fileName) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/file/${patientName}/${fileName}`);
+      if (!response.ok) {
+        throw new Error("File not found");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      link.click();
+
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      alert("Failed to download file.");
+    }
+  };
+
+  // Delete a specific file
+  const handleDelete = async (fileName) => {
+    if (!window.confirm(`Are you sure you want to delete ${fileName}?`)) return;
+
+    try {
+      const response = await fetch(`http://localhost:3001/api/file/${patientName}/${fileName}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete file");
+      }
+      alert(`File ${fileName} deleted successfully`);
+
+      // Remove deleted file from the state
+      setFiles(files.filter((file) => file.name !== fileName));
+    } catch (error) {
+      console.error("Error deleting file:", error);
+      alert("Failed to delete file.");
+    }
+  };
+
+  // Handle file selection for upload
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  // Upload a new file
+  const handleUpload = async () => {
+    if (!patientName || !selectedFile) {
+      alert("Please enter a patient name and select a file to upload");
+      return;
+    }
+  
+    try {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      formData.append("name", patientName); // Ensure `name` matches the backend's field
+  
+      const response = await fetch(`http://localhost:3001/api/upload`, {
+        method: "POST",
+        body: formData,
+      });
+  
+      if (!response.ok) {
+        throw new Error("File upload failed");
+      }
+  
+      const result = await response.json();
+      console.log("File uploaded successfully:", result);
+      alert(`File uploaded successfully for patient: ${patientName}`);
+  
+      // Clear form fields
+      setSelectedFile(null);
+  
+      // Optionally refresh file list
+      fetchFiles();
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("Failed to upload file. Please try again.");
+    }
+  };
+  
   useEffect(() => {
     let isMounted = true;
     const fetchRecords = async () => {
@@ -300,19 +412,24 @@ const MedicalRecords = () => {
               />
             </div>
             <div className="form-group">
-              <label>Contact:</label>
-              <input
-                type="text"
-                value={formData.contact}
-                onChange={(e) =>
-                  handleFormFieldChange("contact", e.target.value)
-                }
-              />
+                <label htmlFor="fileUpload" style={{ marginRight: "10px" }}>
+                  Upload File:
+                </label>
+                <input
+                  type="file"
+                  id="fileUpload"
+                  onChange={handleFileChange}
+                  style={{ fontSize: "16px", marginRight: "10px" }}
+                />
+                <button onClick={handleUpload} style={{marginTop:"10px", padding: "8px 16px", fontSize: "16px" ,backgroundColor:"#28a745",color: "#fff",border: "none", padding: "12px 25px",
+  fontSize: "16px",  cursor: "pointer",  borderRadius: "20px"}}>
+                  Upload
+                </button>              
             </div>
             <button
               className="btn btn-primary"
               type="button"
-              onClick={handleFormSubmit}
+              onClick={handleFormSubmit} 
             >
               {isEditMode ? "Save Changes" : "Add Medical Record"}
             </button>
@@ -320,7 +437,10 @@ const MedicalRecords = () => {
           </p> 
         </div>
       )}
+      <button className="get-record-button" onClick={()=> setActiveTable('table')}>Get Records</button>
+      <button className="get-doc-button" onClick={() => { setActiveTable('table2'); setActiveButton('fetchfile'); }}>Get Documents</button>
 
+      {activeTable === 'table' && ( 
       <table className="table">
         <thead>
           <tr>
@@ -365,7 +485,55 @@ const MedicalRecords = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table>)}
+      {activeTable === 'table2' && activeButton === 'fetchfile' && (
+        <>
+          <div className="get-doc-container">
+          <button className="fetch-file-button"onClick={fetchFiles} style={{ padding: "8px 16px", fontSize: "16px" }}>Fetch Files</button>
+          <table className="table2" style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
+            <thead>
+              <tr>
+                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Document Name</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Uploaded At</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Download</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {files.map((file, index) => (
+                <tr key={index}>
+                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>{file.name}</td>
+                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>{file.uploadedAt}</td>
+                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                    <button
+                      onClick={() => handleDownload(file.name)}
+                      style={{ padding: "6px 12px", fontSize: "14px", cursor: "pointer" }}
+                    >
+                      Download
+                    </button>
+                  </td>
+                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                    <button
+                      onClick={() => handleDelete(file.name)}
+                      style={{
+                        padding: "6px 12px",
+                        fontSize: "14px",
+                        cursor: "pointer",
+                        backgroundColor: "red",
+                        color: "white",
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          </div>
+        </>
+      )}
+
     </div>
   );
 };
