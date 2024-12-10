@@ -1,5 +1,22 @@
 import React from "react";
 import "./landingPage.css"; // Import the CSS styles (if you have a separate CSS file)
+import doctorImage from "../../images/doctor-placeholder.jpg";
+import Apollo from "../../images/Apollologo.jpg";
+import fortis from "../../images/fortis.jpg";
+import govt from "../../images/govt.jpg";
+import aiims from "../../images/aiims.jpg";
+import narayana from "../../images/narayana.jpg";
+import digital from "../../images/digitalhealth.jpg";
+import analytics from "../../images/analytics.jpg";
+import appointment from "../../images/appointment.jpg";
+import role from "../../images/role.jpg";
+import sumedh from "../../images/sumedh.jpg";
+import muzam from "../../images/muz2.jpg";
+import varun from "../../images/var.jpg";
+
+
+
+
 
 const MediTrack = () => {
   return (
@@ -14,9 +31,9 @@ const MediTrack = () => {
             <ul>
               <li><a href="#team">About Us</a></li>
               <li><a href="#features">Features</a></li>
-              <li><a href="#doctors">Our Doctors</a></li>
+              <li><a href="#trusted-clinics">Our clinics</a></li>
               <li><a href="#contact" className="btn btn-primary">Contact Us</a></li>
-              <li><a href="#demo" className="btn btn-secondary">Book a Demo</a></li>
+              
             </ul>
           </nav>
         </div>
@@ -37,7 +54,7 @@ const MediTrack = () => {
             </div>
           </div>
           <div className="hero-image">
-            <img src="doctor-placeholder.jpg" alt="Doctor" />
+            <img src = {doctorImage} alt="Doctor" />
             <div className="info-boxes">
               <div>Digital Health Record Access</div>
               <div>Seamless Patient Tracking</div>
@@ -48,21 +65,23 @@ const MediTrack = () => {
       </section>
 
       {/* Trusted Clinics Section */}
-      <section className="trusted-clinics">
-        <div className="container">
-          <h2>Our Trusted Clinics & Hospitals</h2>
-          <p>
-            We collaborate with trusted clinics and hospitals offering specialties across pediatrics, dermatology, ENT, psychiatry, and more.
-          </p>
-          <div className="logos">
-            <img src="https://via.placeholder.com/150" alt="Clinic Logo" />
-            <img src="https://via.placeholder.com/150" alt="Clinic Logo" />
-            <img src="https://via.placeholder.com/150" alt="Clinic Logo" />
-            <img src="https://via.placeholder.com/150" alt="Clinic Logo" />
-            <img src="https://via.placeholder.com/150" alt="Clinic Logo" />
-          </div>
-        </div>
-      </section>
+     
+      <section id="trusted-clinics" className="trusted-clinics">
+  <div className="container">
+    <h2>Our Trusted Clinics & Hospitals</h2>
+    <p>
+      We collaborate with trusted clinics and hospitals offering specialties across pediatrics, dermatology, ENT, psychiatry, and more.
+    </p>
+    <div className="logos">
+      <img src={Apollo} alt="Clinic Logo" />
+      <img src={fortis} alt="Clinic Logo" />
+      <img src={govt} alt="Clinic Logo" />
+      <img src={aiims} alt="Clinic Logo" />
+      <img src={narayana} alt="Clinic Logo" />
+    </div>
+  </div>
+</section>
+
 
       {/* Achievements Section */}
       <section className="achievements">
@@ -109,7 +128,7 @@ const MediTrack = () => {
             {/* Feature 1 */}
             <div style={{ background: "#fff", border: "1px solid #ddd", borderRadius: "8px", padding: "20px", width: "300px", textAlign: "left", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}>
               <div style={{ textAlign: "center", marginBottom: "15px" }}>
-                <img src="https://cdn.jsdelivr.net/gh/tabler/tabler-icons/icons/cloud.svg" alt="Digital Health Record" style={{ width: "50px", height: "50px" }} />
+                <img src={digital} alt="Digital Health Record" style={{ width: "50px", height: "50px" }} />
               </div>
               <h3 style={{ fontSize: "1.2rem", color: "#333", marginBottom: "10px" }}>Digital Health Record Storage</h3>
               <p style={{ fontSize: "0.9rem", color: "#666" }}>
@@ -119,7 +138,7 @@ const MediTrack = () => {
             {/* Feature 2 */}
             <div style={{ background: "#fff", border: "1px solid #ddd", borderRadius: "8px", padding: "20px", width: "300px", textAlign: "left", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}>
               <div style={{ textAlign: "center", marginBottom: "15px" }}>
-                <img src="https://cdn.jsdelivr.net/gh/tabler/tabler-icons/icons/shield-key.svg" alt="Role-Based Access" style={{ width: "50px", height: "50px" }} />
+                <img src={role}alt="Role-Based Access" style={{ width: "50px", height: "50px" }} />
               </div>
               <h3 style={{ fontSize: "1.2rem", color: "#333", marginBottom: "10px" }}>Role-Based Access with 24x7 Service</h3>
               <p style={{ fontSize: "0.9rem", color: "#666" }}>
@@ -129,7 +148,7 @@ const MediTrack = () => {
             {/* Feature 3 */}
             <div style={{ background: "#fff", border: "1px solid #ddd", borderRadius: "8px", padding: "20px", width: "300px", textAlign: "left", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}>
               <div style={{ textAlign: "center", marginBottom: "15px" }}>
-                <img src="https://cdn.jsdelivr.net/gh/tabler/tabler-icons/icons/calendar-check.svg" alt="Appointment Booking" style={{ width: "50px", height: "50px" }} />
+                <img src={appointment} alt="Appointment Booking" style={{ width: "50px", height: "50px" }} />
               </div>
               <h3 style={{ fontSize: "1.2rem", color: "#333", marginBottom: "10px" }}>Effortless Appointment Booking</h3>
               <p style={{ fontSize: "0.9rem", color: "#666" }}>
@@ -139,7 +158,7 @@ const MediTrack = () => {
             {/* Feature 4 */}
             <div style={{ background: "#fff", border: "1px solid #ddd", borderRadius: "8px", padding: "20px", width: "300px", textAlign: "left", boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}>
               <div style={{ textAlign: "center", marginBottom: "15px" }}>
-                <img src="https://cdn.jsdelivr.net/gh/tabler/tabler-icons/icons/chart-bar.svg" alt="Analytics" style={{ width: "50px", height: "50px" }} />
+                <img src={analytics} alt="Analytics" style={{ width: "50px", height: "50px" }} />
               </div>
               <h3 style={{ fontSize: "1.2rem", color: "#333", marginBottom: "10px" }}>Advanced Analytics and Reports</h3>
               <p style={{ fontSize: "0.9rem", color: "#666" }}>
@@ -161,19 +180,19 @@ const MediTrack = () => {
           <h2>Meet Our Team</h2>
           <div className="team">
             <div className="team-member">
-              <img src="https://via.placeholder.com/150" alt="Team Member 1" />
+              <img src={sumedh}alt="Team Member 1" />
               <h3>Sumedh Udupa U</h3>
               <p>Developer</p>
               <p>1RV23CS252</p>
             </div>
             <div className="team-member">
-              <img src="https://via.placeholder.com/150" alt="Team Member 2" />
+              <img src={muzam} alt="Team Member 2" />
               <h3>Syed Muzammil Hussaini</h3>
               <p>Developer</p>
               <p>1RV23CS263</p>
             </div>
             <div className="team-member">
-              <img src="https://via.placeholder.com/150" alt="Team Member 3" />
+              <img src={varun} alt="Team Member 3" />
               <h3>Varun Gowda R</h3>
               <p>Developer</p>
               <p>1RV23CS281</p>
