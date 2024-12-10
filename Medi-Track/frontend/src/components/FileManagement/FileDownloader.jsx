@@ -1,10 +1,32 @@
-import React, { useState } from "react";
-
+import React, { useState,useEffect } from "react";
+import axios from "axios"
 const FileDownloader = () => {
-  const [patientName, setPatientName] = useState("");
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [patients,setPatients] = useState([]);
+  const [patientName,setPatientName] = useState('');
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const role = localStorage.getItem('role');
+        const email = localStorage.getItem('email');
+        let result;
+        if (role === 'Patient') {
+          result = await axios.get('http://localhost:3001/mydetails', {
+            params: { patientemail: email },
+          });
+        }
+        setPatients(result.data);
+        console.log("result.data",result.data);
+        console.log("patients",patients);
+        setPatientName(result.data.firstname);
+      } catch (error) {
+        console.error('Error fetching patients:', error);
+      }
+    };
+    fetchPatients();
+  }, []);
 
   // Fetch files for a patient
   const fetchFiles = async () => {
@@ -88,7 +110,7 @@ const FileDownloader = () => {
       const formData = new FormData();
       formData.append("file", selectedFile);
       formData.append("name", patientName); // Ensure `name` matches the backend's field
-  
+      
       const response = await fetch(`http://localhost:3001/api/upload`, {
         method: "POST",
         body: formData,
