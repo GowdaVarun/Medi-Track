@@ -19,7 +19,7 @@ const MedicalRecords = () => {
   const [showForm, setShowForm] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [patients, setPatients] = useState([]);
+  const [patients, setPatients] = useState({});
   const [diseasetype, setDiseaseType] = useState('');
   const [diseases, setDiseases] = useState([]);
   const [activeTable, setActiveTable] = useState(null);
@@ -27,13 +27,49 @@ const MedicalRecords = () => {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [patientName,setPatientName] = useState('');
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const role = localStorage.getItem('role');
+        const email = localStorage.getItem('email');
+        let result;
+        if (role === 'Patient') {
+          result = await axios.get('http://localhost:3001/mydetails', {
+            params: { patientemail: email },
+          });
+        }
+        setPatients(result.data);
+        console.log("result.data",result.data);
+        console.log("patients",patients);
+        setPatientName(result.data.firstname);
+      } catch (error) {
+        console.error('Error fetching patients:', error);
+      }
+    };
+    fetchPatients();
+    let isMounted = true;
+    const fetchRecords = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/medical-records"
+        );
+        if (isMounted) {
+          setRecords(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching medical records:", error);
+      }
+    };
 
+    fetchRecords();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
   
   const fetchFiles = async () => {
-    if (!patientName) {
-      alert("Please enter a patient name");
-      return;
-    }
     setLoading(true);
     try {
       const response = await fetch(`http://localhost:3001/api/file/${patientName}`);
@@ -49,7 +85,7 @@ const MedicalRecords = () => {
       setLoading(false);
     }
   };
-
+  
   // Download a specific file
   const handleDownload = async (fileName) => {
     try {
@@ -108,14 +144,20 @@ const MedicalRecords = () => {
   
     try {
       const formData = new FormData();
+      console.log(selectedFile,patientName);
+      
       formData.append("file", selectedFile);
       formData.append("name", patientName); // Ensure `name` matches the backend's field
-  
+      console.log("FormData contents:");
+    for (const pair of formData.entries()) {
+      console.log(`${pair[0]}:`, pair[1]);
+    }
       const response = await fetch(`http://localhost:3001/api/upload`, {
         method: "POST",
         body: formData,
       });
-  
+      console.log("hi");
+      
       if (!response.ok) {
         throw new Error("File upload failed");
       }
@@ -134,28 +176,6 @@ const MedicalRecords = () => {
       alert("Failed to upload file. Please try again.");
     }
   };
-  
-  useEffect(() => {
-    let isMounted = true;
-    const fetchRecords = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:3001/medical-records"
-        );
-        if (isMounted) {
-          setRecords(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching medical records:", error);
-      }
-    };
-
-    fetchRecords();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   const handleFormFieldChange = (key, value) => {
     setFormData((prevData) => ({
@@ -172,41 +192,34 @@ const MedicalRecords = () => {
           const role = localStorage.getItem('role');
           const email = localStorage.getItem('email');
           let result;
-          if (role === 'Admin' || role === 'Doctor') {
-            result = await axios.get('http://localhost:3001/patients');
-          } else if (role === 'Patient') {
-            result = await axios.get('http://localhost:3001/myentries', {
+          if (role === 'Patient') {
+            result = await axios.get('http://localhost:3001/mydetails', {
               params: { patientemail: email },
             });
           }
           setPatients(result.data);
+          console.log("result.data",result.data);
+          console.log("patients",patients);
+          setPatientName(result.data.firstname);
         } catch (error) {
           console.error('Error fetching patients:', error);
         }
       };
       fetchPatients();
-      const filteredpatient = patients.filter(
-        (patient) => patient.contact === formData.contact
-      );
-
-      if (filteredpatient.length > 0) {
-        if (isEditMode) {
+      if (isEditMode) {
           await axios.put(
             `http://localhost:3001/medical-records/${selectedRecord._id}`,
             {
               ...formData,
-              patientName: filteredpatient[0].firstname,
+              patientName: patientName,
             }
           );
         } else {
           await axios.post("http://localhost:3001/medical-records", {
             ...formData,
-            patientName: filteredpatient[0].firstname,
+            patientName: patientName,
           });
         }
-      } else {
-        console.error("Could not find patient with given contact number");
-      }
       const response = await axios.get("http://localhost:3001/medical-records");
       setRecords(response.data);
       setShowForm(false);
@@ -245,14 +258,15 @@ const MedicalRecords = () => {
         const role = localStorage.getItem('role');
         const email = localStorage.getItem('email');
         let result;
-        if (role === 'Admin' || role === 'Doctor') {
-          result = await axios.get('http://localhost:3001/patients');
-        } else if (role === 'Patient') {
-          result = await axios.get('http://localhost:3001/myentries', {
+        if (role === 'Patient') {
+          result = await axios.get('http://localhost:3001/mydetails', {
             params: { patientemail: email },
           });
         }
         setPatients(result.data);
+        console.log("result.data",result.data);
+        console.log("patients",patients);
+        setPatientName(result.data.firstname);
       } catch (error) {
         console.error('Error fetching patients:', error);
       }
@@ -411,7 +425,18 @@ const MedicalRecords = () => {
                 }
               />
             </div>
-            <div className="form-group">
+            {/* <div className="form-group">
+              <label>Contact:</label>
+              <input
+                type="date"
+                value={formData.contact}
+                onChange={(e) =>
+                  handleFormFieldChange("contact", e.target.value)
+                }
+              />
+            </div> */}
+          </form>
+          <div className="form-group">
                 <label htmlFor="fileUpload" style={{ marginRight: "10px" }}>
                   Upload File:
                 </label>
@@ -433,7 +458,6 @@ const MedicalRecords = () => {
             >
               {isEditMode ? "Save Changes" : "Add Medical Record"}
             </button>
-          </form>
           </p> 
         </div>
       )}
@@ -452,11 +476,11 @@ const MedicalRecords = () => {
             <th>Attending Doctor</th>
             <th>Lab Results</th>
             <th>Follow-up Date</th>
-            <th>{localStorage.getItem('role') !== 'Patient' && 'Actions'}</th>
+            {localStorage.getItem('role') !== 'Patient' && <th>Actions</th>}
           </tr>
         </thead>
         <tbody>
-          {records.map((record) => (
+          {records.filter(record => record.patientName === patientName).map((record) => (
             <tr key={record._id}>
               <td>{record.patientName}</td>
               <td>{record.diagnosis}</td>
@@ -493,18 +517,18 @@ const MedicalRecords = () => {
           <table className="table2" style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
             <thead>
               <tr>
-                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Document Name</th>
-                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Uploaded At</th>
-                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Download</th>
-                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Delete</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px"}}>Document Name</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px"}}>Uploaded At</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px"}}>Download</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px"}}>Delete</th>
               </tr>
             </thead>
             <tbody>
               {files.map((file, index) => (
                 <tr key={index}>
-                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>{file.name}</td>
-                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>{file.uploadedAt}</td>
-                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                  <td style={{ border: "1px solid #ddd", padding: "8px", color: "black" }}>{file.name}</td>
+                  <td style={{ border: "1px solid #ddd", padding: "8px", color: "black" }}>{file.uploadedAt}</td>
+                  <td style={{ border: "1px solid #ddd", padding: "8px", color: "black" }}>
                     <button
                       onClick={() => handleDownload(file.name)}
                       style={{ padding: "6px 12px", fontSize: "14px", cursor: "pointer" }}
@@ -533,7 +557,6 @@ const MedicalRecords = () => {
           </div>
         </>
       )}
-
     </div>
   );
 };

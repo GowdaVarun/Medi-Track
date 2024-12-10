@@ -422,7 +422,7 @@ app.get('/myappointments', async (req, res) => {
       appointmentTime: decrypt(appointment.appointmentTime),
       status: appointment.status
     }));
-    res.json(decryptedAppointments[0]);
+    res.json(decryptedAppointments[decryptedAppointments.length-1]);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
