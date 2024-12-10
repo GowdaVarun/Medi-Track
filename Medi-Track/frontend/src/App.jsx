@@ -1,3 +1,4 @@
+import LandingPage from './components/landingPage/landingPage';
 import Home from './components/Home/Home';
 import Login from './components/Login/Login';
 import PatientsPage from './components/Patients/Patients';
@@ -18,7 +19,7 @@ function App() {
     <div style={{marginTop : '-3.5rem'}}>
       <BrowserRouter >
         <Routes>
-          <Route path="/" element ={<Login/>} />
+          <Route path="/" element ={<LandingPage/>} />
           <Route path="/login" element ={<Login/>} />
           <Route path="/register" element ={<Register/>} />
           <Route path="/home" element ={<Home/>} />
