@@ -2,13 +2,13 @@
 .page-background{
     background-color: aqua;
 }
-.container {
+/* .container {
     background: linear-gradient(to right, #ff0000, #004e9c);
     color: #ffffff;
     padding: 20px;
     min-height: 100vh;
   }
-  
+   */
   /* Dashboard button styles */
   .dashboard-button {
     position: absolute;
