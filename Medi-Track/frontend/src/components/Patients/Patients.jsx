@@ -114,7 +114,8 @@ const PatientsPage = () => {
 
   const handleDelete = async (id) => {
     console.log(`Deleting patient with ID: ${id}`);
-    const role = localStorage.getItem('role');  
+    const role = localStorage.getItem('role');
+    const email = localStorage.getItem('email'); 
     if(role=='Admin' || role === 'Doctor'){
       try {
         await axios.delete(`http://localhost:3001/patients/${id}`);
@@ -127,7 +128,9 @@ const PatientsPage = () => {
       const patientDetails = { ...newPatient, disease: '' };  
       try {
         await axios.put(`http://localhost:3001/patients/${id}`,patientDetails);
-        const result = await axios.get('http://localhost:3001/myentries');
+        const result = await axios.get('http://localhost:3001/myentries', {
+          params: { patientemail: email },
+        })
         setPatients(result.data);
       } catch (error) {
         console.error('Error deleting disease:', error);

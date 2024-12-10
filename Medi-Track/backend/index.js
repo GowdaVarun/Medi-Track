@@ -229,7 +229,6 @@ app.get('/patients', async (req, res) => {
     }));
     res.json(decryptedPatients);
   } catch (err) {
-    
     res.status(500).json({ message: err.message });
   }
 });
@@ -241,10 +240,11 @@ app.get('/myentries', async (req, res) => {
     
     // Find patients with matching first or last name (or both if you prefer)
     const patients = await PatientModel.find({
-      $and: [
-        { "email": patientemail },
-        { "disease": {$ne:''} } // Checks that 'disease' is not an empty string
-      ]
+      "email": patientemail 
+      // $and: [
+        // { "email": patientemail },
+      //   { "disease": {$ne:''} } // Checks that 'disease' is not an empty string
+      // ]
     });
 
     // Decrypt patient information
@@ -311,10 +311,10 @@ app.put('/patients/:id', async (req, res) => {
       regDate: decrypt(existingPatient.regDate),
       contact: decrypt(existingPatient.contact),
       disease: decrypt(existingPatient.disease),
-      currentMedications: decrypt(patient.currentMedications),
-      address: decrypt(patient.address),
-      bloodGroup: decrypt(patient.bloodGroup),
-      gender: decrypt(patient.gender),
+      currentMedications: decrypt(existingPatient.currentMedications),
+      address: decrypt(existingPatient.address),
+      bloodGroup: decrypt(existingPatient.bloodGroup),
+      gender: decrypt(existingPatient.gender),
     };
 
     // Update the patient information
@@ -351,7 +351,7 @@ app.put('/patients/:id', async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
-
+ 
 app.delete('/patients/:id', async (req, res) => {
   const { id } = req.params;
   try {
