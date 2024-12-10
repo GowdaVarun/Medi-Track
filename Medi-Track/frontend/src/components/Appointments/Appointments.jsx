@@ -34,6 +34,27 @@ const AppointmentBooking = () => {
 
     fetchData();
   }, []);
+    // Function to get the current date in YYYY-MM-DD format
+    const getCurrentDate = () => {
+      const now = new Date();
+      return now.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    };
+  
+    // Function to get the current time in HH:MM format
+    const getCurrentTime = () => {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      return `${hours}:${minutes}`; // Format: HH:MM
+    };
+  
+    // Populate form fields with current date and time when component mounts
+    useEffect(() => {
+      setFormData({
+        appointmentDate: getCurrentDate(),
+        appointmentTime: getCurrentTime(),
+      });
+    }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -141,8 +162,8 @@ const AppointmentBooking = () => {
             <form onSubmit={handleAppointmentBooking}>
               <div className="form-row">
                 <input type="text" name="patientName" value={formData.patientName} onChange={handleInputChange} placeholder="Patient Name" />
-                <input type="text" name="appointmentDate" value={formData.appointmentDate} onChange={handleInputChange} placeholder="Appointment Date" />
-                <input type="text" name="appointmentTime" value={formData.appointmentTime} onChange={handleInputChange} placeholder="Appointment Time" />
+                <input type="text" name="appointmentDate" value={formData.appointmentDate} onChange={handleInputChange} placeholder="Appointment Date" readOnly/>
+                <input type="text" name="appointmentTime" value={formData.appointmentTime} onChange={handleInputChange} placeholder="Appointment Time" readOnly/>
                 <input type="text" name="age" value={formData.age} onChange={handleInputChange} placeholder="Age" />
                 <input type="text" name="gender" value={formData.gender} onChange={handleInputChange} placeholder="Gender" />
                 <input type="text" name="contactNumber" value={formData.contactNumber} onChange={handleInputChange} placeholder="Contact Number" />
