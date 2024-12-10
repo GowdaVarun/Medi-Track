@@ -102,39 +102,39 @@ table td {
   transition: background-color 0.3s ease;
 }
 
-.btn-success {
+.button-confirm{
   background-color: #28a745;
   color: white;
 }
 
-.btn-success:hover {
+.button-confirm:hover {
   background-color: #218838;
 }
 
-.btn-danger {
+.button-delete{
   background-color: #dc3545;
   color: white;
 }
 
-.btn-danger:hover {
+.button-delete:hover {
   background-color: #c82333;
 }
 
-.btn-secondary {
+.button-complete {
   background-color: #6c757d;
   color: white;
 }
 
-.btn-secondary:hover {
+.button-complete:hover {
   background-color: #5a6268;
 }
 
-.btn-warning {
+.button-cancel {
   background-color: #ffc107;
   color: white;
 }
 
-.btn-warning:hover {
+.button-cancel:hover {
   background-color: #e0a800;
 }
 
@@ -188,4 +188,12 @@ button.dashboard-btn:hover {
   table {
     width: 100%;
   }
+}
+
+.registered-container{
+  min-height: 100vh;
+}
+
+.all-appoint-container{
+  min-height: 100vh;
 }

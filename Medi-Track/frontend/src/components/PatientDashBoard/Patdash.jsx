@@ -22,6 +22,9 @@ const PatientDashboard = () => {
         lastVisit: "",
         allergies: "",
         currentMedications: "",
+        height:"",
+        weight:"",
+        dob:"",
     });
     
     useEffect(() => {
@@ -91,6 +94,10 @@ const PatientDashboard = () => {
                             <p><strong>Age:</strong> {patientDetails.age}</p>
                             <p><strong>Gender:</strong> {patientDetails.gender}</p>
                             <p><strong>Blood Group:</strong> {patientDetails.bloodGroup}</p>
+                            <p><strong>Height:</strong> {patientDetails.height}</p>
+                            <p><strong>Weight:</strong> {patientDetails.weight}</p>
+                            <p><strong>Date Of Birth:</strong> {patientDetails.dob}</p>
+
                         </div>
                         <div className="info-card">
                             <h3><FaPhone className="card-icon" /> Contact Details</h3>

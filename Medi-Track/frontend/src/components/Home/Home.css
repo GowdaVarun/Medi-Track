@@ -1,6 +1,8 @@
 /* General Background */
-.dashboard-container {
-  background-color: #f0f4f8; /* Light grayish-blue background */
+.admin-dashboard-container {
+  /* background-color: #faf2e4; */
+  background: url('/home/varun/varun/DTL/Medi-Track/Medi-Track/frontend/src/assets/loginbackground.jpeg');
+  background-size: cover;  /* Light grayish-blue background */
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -11,7 +13,7 @@
   padding: 50px;
 }
 
-.dashboard-title {
+.admin-dashboard-title {
   color: #333;
   font-size: 36px;
   font-weight: 700;
@@ -19,7 +21,7 @@
 }
 
 /* Button Container */
-.button-container {
+.admin-button-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,7 +30,7 @@
 }
 
 /* Buttons */
-.btn {
+.admin-btn {
   padding: 15px 30px; /* Padding adjusts the button size */
   font-size: 16px;
   font-weight: bold;
@@ -37,30 +39,44 @@
   transition: all 0.3s ease-in-out;
   cursor: pointer;
   text-align: center;
-  width: 200px; /* Auto width allows the button to fit the text dynamically */
+  width: 220px; /* Auto width allows the button to fit the text dynamically */
   min-width: 200px; /* Optional: Ensure a minimum button size for consistency */
-  display: inline-block;
-}
-
-.btn-primary {
+  /* display: inline-block; */
+  align-content: center;
+  align-self: center;
+  text-align: center;
   background-color: #2575fc;
   color: #fff;
   border: none;
 }
 
-.btn-primary:hover {
+.admin-btn:hover {
   background-color: #6a11cb;
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(37, 117, 252, 0.5);
 }
 
-.btn-secondary {
-  background: none;
-  color: #2575fc;
-  border: 1px solid #2575fc;
+.admin-logout-btn {
+  padding: 15px 30px; /* Padding adjusts the button size */
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 50px; /* Fully rounded buttons */
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  text-align: center;
+  width: 220px; /* Auto width allows the button to fit the text dynamically */
+  min-width: 200px; /* Optional: Ensure a minimum button size for consistency */
+  /* display: inline-block; */
+  align-content: center;
+  align-self: center;
+  text-align: center;
+  background-color: red;
+  color: #fff;
+  border: none;
 }
 
-.btn-secondary:hover {
+.admin-logout-btn:hover {
   background-color: #2575fc;
   color: #fff;
 }

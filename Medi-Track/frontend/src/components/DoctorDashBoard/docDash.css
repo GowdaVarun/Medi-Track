@@ -1,6 +1,6 @@
 /* Background and Container Styles */
 .login-doc-background {
-    background: linear-gradient(to right, #4ccb11, #2575fc); /* Two-color gradient */
+    background: #faf2e4; 
     background-size: cover;
     background-position: center;
     height: 100vh;
@@ -42,16 +42,19 @@
 .doc-dashboard-button {
     background-color: #007bff;
     color: white;
-    padding: 15px 30px;
+    padding: 15px 0; /* Adjusted padding to respect the fixed width */
     font-size: 18px;
     font-weight: bold;
     border-radius: 25px;
     text-align: center;
     text-decoration: none;
-    display: inline-block;
     width: 200px; /* Ensures all buttons have the same width */
     margin: 10px; /* Adds spacing between buttons */
     transition: all 0.3s;
+    display: inline-block; /* Ensures it behaves like a button */
+    white-space: nowrap; /* Prevents text from wrapping */
+    overflow: hidden; /* Hides overflow text */
+    text-overflow: ellipsis; /* Adds ellipsis for overflowing text */
 }
 
 .doc-dashboard-button:hover {

@@ -229,6 +229,7 @@ const DoctorsPage = () => {
               <th onClick={() => handleSort('specialization')}>Department</th>
               <th onClick={() => handleSort('location')}>Qualification</th>
               <th onClick={() => handleSort('contact')}>Contact</th>
+              {!canEditDelete && <th>Appointments</th>}
               {canEditDelete && <th>Actions</th>}
             </tr>
           </thead>
@@ -239,6 +240,7 @@ const DoctorsPage = () => {
                 <td>{doctor.specialization}</td>
                 <td>{doctor.location}</td>
                 <td>{doctor.contact}</td>
+                {!canEditDelete &&  <td><Link to={"/appointments"} ><button className="book-appoint-button">Book Appointment</button></Link></td>}
                 {canEditDelete && (
                   <td>
                     <button
