@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Register.css';
@@ -24,20 +24,30 @@ const Register = () => {
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [registrationError, setRegistrationError] = useState(false);
   const [registrationFailed, setRegistrationFailed] = useState(false);
+  const [uniqueID,setUniqueID] = useState('');
   const navigate = useNavigate();
   const backend_url = 'http://localhost:3001';
+  useEffect(() => {
+    if (registrationSuccess && uniqueID) {
+      alert(`Your Unique ID is: ${uniqueID}`);
+    }
+  }, [uniqueID, registrationSuccess]); 
 
   const handleRegisterClick = (event) => {
     event.preventDefault();
-    
+    let uniqueID;
     let registrationData = { email, password, role };
 
     if (role === 'Doctor' || role === 'Admin') {
       registrationData = { ...registrationData, name, specialization, location, contact };
     } else if (role === 'Patient') {
       registrationData = { ...registrationData, firstname, lastname, age, regDate, contact,dob,weight,height,gender,bloodGroup,address};
+      //UNIQUE ID Generation for patient
+      let newID = (firstname.substring(0, 4).toUpperCase() + dob.substring(dob.length - 4));
+      console.log(newID);
+      registrationData = {...registrationData,uniqueID:newID};
+      setUniqueID(newID);
     }
-
     axios.post(`${backend_url}/register`, registrationData)
       .then(response => {
         if (response.data === 'success') {
