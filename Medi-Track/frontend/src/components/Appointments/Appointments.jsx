@@ -188,6 +188,7 @@ const AppointmentBooking = () => {
                 <th>Age</th>
                 <th>Gender</th>
                 <th>Contact Number</th>
+                <th>Current Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -200,15 +201,22 @@ const AppointmentBooking = () => {
                   <td>{appointment.age}</td>
                   <td>{appointment.gender}</td>
                   <td>{appointment.contactNumber}</td>
+                  <td>{appointment.status}</td>
                   <td>
                     {appointment.status === 'scheduled' && (
                       <>
                         <button className="btn btn-success" onClick={() => handleStatusChange(appointment._id, 'confirmed')}>Confirm</button>
-                        <button className="btn btn-danger" onClick={() => handleStatusChange(appointment._id, 'canceled')}>Cancel</button>
+                        <button className="btn btn-danger" onClick={() => handleDeleteAppointment(appointment._id, 'canceled')}>Cancel</button>
                         <button className="btn btn-secondary" onClick={() => handleStatusChange(appointment._id, 'completed')}>Complete</button>
                       </>
                     )}
-                    <button className="btn btn-warning" onClick={() => handleDeleteAppointment(appointment._id)}>Delete</button>
+                    {appointment.status === 'confirmed'&& (
+                        <button className="btn btn-secondary" onClick={() => handleStatusChange(appointment._id, 'completed')}>Complete</button>
+                    )}
+                    {appointment.status === 'cancelled' && (
+                      <button className="btn btn-warning" onClick={() => handleDeleteAppointment(appointment._id)}>Delete</button>
+                    )}
+                    <center>------</center>
                   </td>
                 </tr>
               ))}
@@ -229,6 +237,7 @@ const AppointmentBooking = () => {
                 <th>Age</th>
                 <th>Gender</th>
                 <th>Contact Number</th>
+                <th>Current Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -241,11 +250,12 @@ const AppointmentBooking = () => {
                   <td>{appointment.age}</td>
                   <td>{appointment.gender}</td>
                   <td>{appointment.contactNumber}</td>
+                  <td>{appointment.status}</td>
                   <td>
                     {appointment.status === 'scheduled' && (
                       <>
                         <button className="btn btn-success" onClick={() => handleStatusChange(appointment._id, 'confirmed')}>Confirm</button>
-                        <button className="btn btn-danger" onClick={() => handleStatusChange(appointment._id, 'canceled')}>Cancel</button>
+                        <button className="btn btn-danger" onClick={() => handleDeleteAppointment(appointment._id, 'canceled')}>Cancel</button>
                         <button className="btn btn-secondary" onClick={() => handleStatusChange(appointment._id, 'completed')}>Complete</button>
                       </>
                     )}

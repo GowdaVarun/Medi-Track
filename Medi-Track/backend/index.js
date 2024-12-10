@@ -456,7 +456,7 @@ app.put('/appointments/:id', async (req, res) => {
         patientemail,
         appointmentDate: encrypt(appointmentDate || decryptedAppointment.appointmentDate),
         appointmentTime: encrypt(appointmentTime || decryptedAppointment.appointmentTime),
-        age: encrypt(age.toString() || decryptedAppointment.age),
+        age: encrypt((age != null ? age.toString() : '') || decryptedAppointment.age),
         gender: encrypt(gender || decryptedAppointment.gender),
         contactNumber: encrypt(contactNumber || decryptedAppointment.contactNumber),
       },
@@ -501,10 +501,13 @@ app.post('/login', loginLimiter, async (req, res) => {
     return res.status(400).json('Invalid role');
   }
   try {
-    const user = await Model.findOne({ email });
-
+    const user = await Model.findOne({
+      $or: [{ email: email }, { uniqueID: email }] // Check if data1 matches either email or uniqueID
+    });
+    
     if (user) {
       const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+
       // console.log("Hashed Password:", hashedPassword);
       // console.log("User entered password from db:", user.password);
       if (hashedPassword === user.password) {
@@ -562,7 +565,7 @@ app.post('/register', loginLimiter, async (req, res) => {
         contact : encrypt(contact)
       });
     } else if (role === 'Patient') {
-      const { firstname, lastname, age, regDate, contact,height,weight,dob,address,bloodGroup,gender} = req.body;
+      const { firstname, lastname, age, regDate, contact,height,weight,dob,address,bloodGroup,gender,uniqueID} = req.body;
       newUser = new PatientModel({
         name : encrypt(name),
         email : email,
@@ -580,6 +583,7 @@ app.post('/register', loginLimiter, async (req, res) => {
         weight: encrypt(weight),
         dob: encrypt(dob),
         address: encrypt(address),
+        uniqueID: uniqueID,
       });
     } else {
       newUser = new FormDataModel({

@@ -64,7 +64,11 @@ const patientSchema = new mongoose.Schema({
   weight:{
     type: String,
     required:true,
-  }
+  },
+  uniqueID: {
+    type: String,
+  } 
+  
 });
 
 const PatientModel = mongoose.model('patients', patientSchema);

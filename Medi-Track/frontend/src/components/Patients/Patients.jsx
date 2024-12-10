@@ -380,7 +380,7 @@ const PatientsPage = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredPatients.map((patient) => (
+            {localStorage.getItem('role') === 'Patient' && filteredPatients.map((patient) => (
               <tr key={patient._id}>
                 <td>
                   {editablePatientId === patient._id ? (
@@ -476,6 +476,120 @@ const PatientsPage = () => {
                     />
                   ) : (
                     patient.disease
+                  )}
+                </td>
+                <td>
+                  {editablePatientId === patient._id ? (
+                    <button className="btn btn-success" onClick={() => handleSave(patient._id)}>
+                      Save
+                    </button>
+                  ) : (
+                    <button className="btn btn-primary" onClick={() => handleEdit(patient._id)}>
+                      Edit
+                    </button>
+                  )}
+                  <button className="btn btn-danger" onClick={() => handleDelete(patient._id)}>
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {localStorage.getItem('role') !== 'Patient' && patients.map((patient) => (
+              <tr key={patient._id}>
+                <td>
+                  {editablePatientId === patient._id ? (
+                    <input
+                      type="text"
+                      value={patient.firstname}
+                      onChange={(e) => {
+                        const updatedPatient = { ...patient, firstname: e.target.value };
+                        setPatients((prevPatients) =>
+                          prevPatients.map((p) => (p._id === patient._id ? updatedPatient : p))
+                        );
+                      }}
+                    />
+                  ) : (
+                    patient.firstname
+                  )}
+                </td>
+                <td>
+                  {editablePatientId === patient._id ? (
+                    <input
+                      type="text"
+                      value={patient.lastname}
+                      onChange={(e) => {
+                        const updatedPatient = { ...patient, lastname: e.target.value };
+                        setPatients((prevPatients) =>
+                          prevPatients.map((p) => (p._id === patient._id ? updatedPatient : p))
+                        );
+                      }}
+                    />
+                  ) : (
+                    patient.lastname
+                  )}
+                </td>
+                <td>
+                  {editablePatientId === patient._id ? (
+                    <input
+                      type="text"
+                      value={patient.age}
+                      onChange={(e) => {
+                        const updatedPatient = { ...patient, age: e.target.value };
+                        setPatients((prevPatients) =>
+                          prevPatients.map((p) => (p._id === patient._id ? updatedPatient : p))
+                        );
+                      }}
+                    />
+                  ) : (
+                    patient.age
+                  )}
+                </td>
+                <td>
+                  {editablePatientId === patient._id ? (
+                    <input
+                      type="text"
+                      value={patient.regDate}
+                      onChange={(e) => {
+                        const updatedPatient = { ...patient, regDate: e.target.value };
+                        setPatients((prevPatients) =>
+                          prevPatients.map((p) => (p._id === patient._id ? updatedPatient : p))
+                        );
+                      }}
+                    />
+                  ) : (
+                    patient.regDate
+                  )}
+                </td>
+                <td>
+                  {editablePatientId === patient._id ? (
+                    <input
+                      type="text"
+                      value={patient.contact}
+                      onChange={(e) => {
+                        const updatedPatient = { ...patient, contact: e.target.value };
+                        setPatients((prevPatients) =>
+                          prevPatients.map((p) => (p._id === patient._id ? updatedPatient : p))
+                        );
+                      }}
+                    />
+                  ) : (
+                    patient.contact
+                  )}
+                </td>
+                <td>
+                  {editablePatientId === patient._id ? (
+                    <input
+                      type="text"
+                      value={patient.disease}
+                      onChange={(e) => {
+                        const updatedPatient = { ...patient, disease: e.target.value };
+                        setPatients((prevPatients) =>
+                          prevPatients.map((p) => (p._id === patient._id ? updatedPatient : p))
+                        );
+                      }}
+                    />
+                  ) : (
+                    patient.disease === ''? '-----': patient.disease
                   )}
                 </td>
                 <td>
