@@ -1,6 +1,6 @@
 /* Background and Container Styles */
 .patient-dashboard-background {
-    background: linear-gradient(to right, #4ccb11, #2575fc);
+    background-color: #faf2e4;
     min-height: 100vh;
     padding: 20px;
     display: flex;
@@ -22,13 +22,13 @@
 /* Sidebar */
 .sidebar {
     background-color: rgba(255, 255, 255, 0.95);
-    width: 250px;
     padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    height: 85vh;
+    height: 85%;
+    width: 16%;
     border-radius: 15px;
     position: fixed;
     left: 20px;
@@ -121,18 +121,13 @@ strong {
     font-weight: 600;
 }
 
-/* Header Styles */
-.patient-dashboard-header {
-    font-size: 24px;
-    font-weight: bold;
-    color: #000 !important;
-    margin-bottom: 20px;
-}
+
 
 .patient-dashboard-header h1 {
-    font-size: 24px;
+    color: #000;
+    font-size: 32px;
     margin: 0;
-    line-height: 1.2;
+    line-height: 1.3;
 }
 
 /* Navigation Buttons */
@@ -298,6 +293,9 @@ strong {
     animation: fadeIn 0.5s ease-out;
 }
 
+.info-card{
+    margin-bottom: 15px;
+}
 /* Loading State */
 .loading-state {
     display: flex;

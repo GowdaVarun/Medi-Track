@@ -1,6 +1,6 @@
 /* Background and Container Styles */
-.register-background {
-    background: linear-gradient(to right, #4ccb11, #2575fc); /* Two-color gradient */
+.register-background { 
+    background-color: #faf2e4;
     background-size: cover;
     background-position: center;
     height: 100vh;
