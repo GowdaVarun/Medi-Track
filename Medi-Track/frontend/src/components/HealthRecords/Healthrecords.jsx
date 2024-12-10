@@ -20,7 +20,121 @@ const MedicalRecords = () => {
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [patients, setPatients] = useState([]);
+  const [diseasetype, setDiseaseType] = useState('');
+  const [diseases, setDiseases] = useState([]);
+  const [activeTable, setActiveTable] = useState(null);
+  const [activeButton, setActiveButton] = useState(null);
+  const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
 
+  
+  const fetchFiles = async () => {
+    if (!patientName) {
+      alert("Please enter a patient name");
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await fetch(`http://localhost:3001/api/file/${patientName}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch files for the patient");
+      }
+      const data = await response.json();
+      setFiles(data.files || []); // Assuming response contains { files: [...] }
+    } catch (error) {
+      console.error("Error fetching files:", error);
+      alert("Error fetching files. Ensure the patient name is correct.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Download a specific file
+  const handleDownload = async (fileName) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/file/${patientName}/${fileName}`);
+      if (!response.ok) {
+        throw new Error("File not found");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      link.click();
+
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      alert("Failed to download file.");
+    }
+  };
+
+  // Delete a specific file
+  const handleDelete = async (fileName) => {
+    if (!window.confirm(`Are you sure you want to delete ${fileName}?`)) return;
+
+    try {
+      const response = await fetch(`http://localhost:3001/api/file/${patientName}/${fileName}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete file");
+      }
+      alert(`File ${fileName} deleted successfully`);
+
+      // Remove deleted file from the state
+      setFiles(files.filter((file) => file.name !== fileName));
+    } catch (error) {
+      console.error("Error deleting file:", error);
+      alert("Failed to delete file.");
+    }
+  };
+
+  // Handle file selection for upload
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  // Upload a new file
+  const handleUpload = async () => {
+    if (!patientName || !selectedFile) {
+      alert("Please enter a patient name and select a file to upload");
+      return;
+    }
+  
+    try {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+      formData.append("name", patientName); // Ensure `name` matches the backend's field
+  
+      const response = await fetch(`http://localhost:3001/api/upload`, {
+        method: "POST",
+        body: formData,
+      });
+  
+      if (!response.ok) {
+        throw new Error("File upload failed");
+      }
+  
+      const result = await response.json();
+      console.log("File uploaded successfully:", result);
+      alert(`File uploaded successfully for patient: ${patientName}`);
+  
+      // Clear form fields
+      setSelectedFile(null);
+  
+      // Optionally refresh file list
+      fetchFiles();
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("Failed to upload file. Please try again.");
+    }
+  };
+  
   useEffect(() => {
     let isMounted = true;
     const fetchRecords = async () => {
@@ -53,49 +167,46 @@ const MedicalRecords = () => {
   const handleFormSubmit = async () => {
     try {
       //fetch patients
-    const fetchPatients = async () => {
-      try {
-        const role = localStorage.getItem('role');
-        const email = localStorage.getItem('email');
-        let result;
-        if (role === 'Admin'|| role === 'Doctor') {
-          result = await axios.get('http://localhost:3001/patients');
-        } else if (role === 'Patient') {
-          result = await axios.get('http://localhost:3001/myentries', {
-            params: { patientemail: email },
-          });
+      const fetchPatients = async () => {
+        try {
+          const role = localStorage.getItem('role');
+          const email = localStorage.getItem('email');
+          let result;
+          if (role === 'Admin' || role === 'Doctor') {
+            result = await axios.get('http://localhost:3001/patients');
+          } else if (role === 'Patient') {
+            result = await axios.get('http://localhost:3001/myentries', {
+              params: { patientemail: email },
+            });
+          }
+          setPatients(result.data);
+        } catch (error) {
+          console.error('Error fetching patients:', error);
         }
-        console.log("patients in result.data",result.data);
-        setPatients(result.data);
-        console.log("patients in patients variable",patients);
-      } catch (error) {
-        console.error('Error fetching patients:', error);
-      }
-    };
-    fetchPatients();
-    const filteredpatient = patients.filter(
-      (patient) => patient.contact === formData.contact
-    );
-    console.log("filtered patient[0]=> ",filteredpatient[0]);
-    
-    if(filteredpatient){
-      if (isEditMode) {
-        await axios.put(
-          `http://localhost:3001/medical-records/${selectedRecord._id}`,
-          {
+      };
+      fetchPatients();
+      const filteredpatient = patients.filter(
+        (patient) => patient.contact === formData.contact
+      );
+
+      if (filteredpatient.length > 0) {
+        if (isEditMode) {
+          await axios.put(
+            `http://localhost:3001/medical-records/${selectedRecord._id}`,
+            {
+              ...formData,
+              patientName: filteredpatient[0].firstname,
+            }
+          );
+        } else {
+          await axios.post("http://localhost:3001/medical-records", {
             ...formData,
             patientName: filteredpatient[0].firstname,
-          }
-        );
+          });
+        }
       } else {
-        await axios.post("http://localhost:3001/medical-records", {
-          ...formData,
-          patientName: filteredpatient[0].firstname,
-        });
+        console.error("Could not find patient with given contact number");
       }
-    }else{
-      console.error("Couldnot find patient with given contact number");
-    }
       const response = await axios.get("http://localhost:3001/medical-records");
       setRecords(response.data);
       setShowForm(false);
@@ -134,7 +245,7 @@ const MedicalRecords = () => {
         const role = localStorage.getItem('role');
         const email = localStorage.getItem('email');
         let result;
-        if (role === 'Admin'|| role === 'Doctor') {
+        if (role === 'Admin' || role === 'Doctor') {
           result = await axios.get('http://localhost:3001/patients');
         } else if (role === 'Patient') {
           result = await axios.get('http://localhost:3001/myentries', {
@@ -142,8 +253,6 @@ const MedicalRecords = () => {
           });
         }
         setPatients(result.data);
-        console.log("patients",result.data);
-        console.log("patients",patients);
       } catch (error) {
         console.error('Error fetching patients:', error);
       }
@@ -163,6 +272,20 @@ const MedicalRecords = () => {
     }
   };
 
+  const handleDiseaseTypeChange = (e) => {
+    const type = e.target.value;
+    setDiseaseType(type);
+
+    // Set diseases based on disease type
+    if (type === "Acute Disease") {
+      setDiseases(["Flu", "Pneumonia", "Gastroenteritis"]);
+    } else if (type === "Severe Disease") {
+      setDiseases(["Cancer", "Heart Disease", "Chronic Kidney Disease"]);
+    } else {
+      setDiseases([]);
+    }
+  };
+
   return (
     <div className="medical-records-container">
       <div className="header">
@@ -176,11 +299,11 @@ const MedicalRecords = () => {
           }
           style={{ position: "absolute", top: "20px", left: "20px" }}
         >
-          <button className="btn btn-primary">Dashboard</button>
+          <button className="btn btn-primary" style={{fontSize:"20px"}}>Dashboard</button>
         </Link>
       </div>
 
-      <h1 style={{ display: "block", textAlign: "center", marginTop: "70px" }}>
+      <h1 style={{ display: "block", textAlign: "center", marginTop: "70px" ,color: "darkblue",fontSize: "50px"}}>
         Medical Records
       </h1>
 
@@ -188,6 +311,7 @@ const MedicalRecords = () => {
         <button
           className="btn btn-success"
           onClick={() => setShowForm((prevShowForm) => !prevShowForm)}
+          style={{fontSize:"20px", width:"15%"}}
         >
           {showForm ? "Hide Form" : "Add Medical Record"}
         </button>
@@ -195,19 +319,37 @@ const MedicalRecords = () => {
 
       {showForm && (
         <div className="form-container">
-          <h2>
+          <p>
+            <h1>
             {isEditMode ? "Edit Medical Record" : "Add New Medical Record"}
-          </h2>
+            </h1>
           <form>
             <div className="form-group">
+              <label>Disease Type:</label>
+              <select
+                value={diseasetype}
+                onChange={handleDiseaseTypeChange}
+              >
+                <option value="" disabled>Select type</option>
+                <option value="Acute Disease">Acute Disease</option>
+                <option value="Severe Disease">Severe Disease</option>
+              </select>
+            </div>
+            <div className="form-group">
               <label>Diagnosis:</label>
-              <input
-                type="text"
+              <select
                 value={formData.diagnosis}
                 onChange={(e) =>
                   handleFormFieldChange("diagnosis", e.target.value)
                 }
-              />
+              >
+                <option value="" disabled>Select Diagnosis</option>
+                {diseases.map((disease, index) => (
+                  <option key={index} value={disease}>
+                    {disease}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="form-group">
               <label>Treatment Plan:</label>
@@ -270,26 +412,35 @@ const MedicalRecords = () => {
               />
             </div>
             <div className="form-group">
-              <label>Contact:</label>
-              <input
-                type="text"
-                value={formData.contact}
-                onChange={(e) =>
-                  handleFormFieldChange("contact", e.target.value)
-                }
-              />
+                <label htmlFor="fileUpload" style={{ marginRight: "10px" }}>
+                  Upload File:
+                </label>
+                <input
+                  type="file"
+                  id="fileUpload"
+                  onChange={handleFileChange}
+                  style={{ fontSize: "16px", marginRight: "10px" }}
+                />
+                <button onClick={handleUpload} style={{marginTop:"10px", padding: "8px 16px", fontSize: "16px" ,backgroundColor:"#28a745",color: "#fff",border: "none", padding: "12px 25px",
+  fontSize: "16px",  cursor: "pointer",  borderRadius: "20px"}}>
+                  Upload
+                </button>              
             </div>
             <button
               className="btn btn-primary"
               type="button"
-              onClick={handleFormSubmit}
+              onClick={handleFormSubmit} 
             >
               {isEditMode ? "Save Changes" : "Add Medical Record"}
             </button>
           </form>
+          </p> 
         </div>
       )}
+      <button className="get-record-button" onClick={()=> setActiveTable('table')}>Get Records</button>
+      <button className="get-doc-button" onClick={() => { setActiveTable('table2'); setActiveButton('fetchfile'); }}>Get Documents</button>
 
+      {activeTable === 'table' && ( 
       <table className="table">
         <thead>
           <tr>
@@ -315,30 +466,74 @@ const MedicalRecords = () => {
               <td>{record.attendingDoctor}</td>
               <td>{record.labResults}</td>
               <td>{record.followUpDate}</td>
-              <td>{record.contact}</td>
-              <td>
-                {/* Conditionally render the Edit and Delete buttons based on user role */}
-                {localStorage.getItem("role") !== "Patient" && (
-                  <>
-                    <button
-                      className="btn btn-info"
-                      onClick={() => handleEditRecord(record)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDeleteRecord(record._id)}
-                    >
-                      Delete
-                    </button>
-                  </>
-                )}
-              </td>
+              {localStorage.getItem('role') !== 'Patient' && (
+                <td>
+                  <button
+                    className="btn btn-warning"
+                    onClick={() => handleEditRecord(record)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDeleteRecord(record._id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
-      </table>
+      </table>)}
+      {activeTable === 'table2' && activeButton === 'fetchfile' && (
+        <>
+          <div className="get-doc-container">
+          <button className="fetch-file-button"onClick={fetchFiles} style={{ padding: "8px 16px", fontSize: "16px" }}>Fetch Files</button>
+          <table className="table2" style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
+            <thead>
+              <tr>
+                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Document Name</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Uploaded At</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Download</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px" }}>Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {files.map((file, index) => (
+                <tr key={index}>
+                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>{file.name}</td>
+                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>{file.uploadedAt}</td>
+                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                    <button
+                      onClick={() => handleDownload(file.name)}
+                      style={{ padding: "6px 12px", fontSize: "14px", cursor: "pointer" }}
+                    >
+                      Download
+                    </button>
+                  </td>
+                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                    <button
+                      onClick={() => handleDelete(file.name)}
+                      style={{
+                        padding: "6px 12px",
+                        fontSize: "14px",
+                        cursor: "pointer",
+                        backgroundColor: "red",
+                        color: "white",
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          </div>
+        </>
+      )}
+
     </div>
   );
 };

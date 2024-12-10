@@ -1,0 +1,120 @@
+/* General container styles */
+.page-background{
+    background-color: aqua;
+}
+.container {
+    background: linear-gradient(to right, #ff0000, #004e9c);
+    color: #ffffff;
+    padding: 20px;
+    min-height: 100vh;
+  }
+  
+  /* Dashboard button styles */
+  .dashboard-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+  }
+  
+  /* Page header styles */
+  .page-header {
+    text-align: center;
+    margin: 60px 0;
+    color: white;
+  }
+  
+  /* Form button styles */
+  .form-toggle-button {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Form container styles */
+  .form-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .form-box {
+    width: 60%;
+    background-color: #2e2e2e;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Form heading styles */
+  .form-heading {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Form input styles */
+  .form-input {
+    margin-bottom: 15px;
+  }
+  
+  .form-input label {
+    margin-bottom: 5px;
+  }
+  
+  .form-input input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  /* Search bar styles */
+  .search-bar {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .search-bar input {
+    padding: 10px;
+    width: 50%;
+    border-radius: 5px;
+    max-width: 400px;
+  }
+  
+  /* Table container styles */
+  .table-container {
+    height: 60vh;
+    overflow-y: auto;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ffffff;
+  }
+  
+  .table th, .table td {
+    padding: 10px;
+  }
+  
+  .table th {
+    background-color: #1e1e1e;
+    cursor: pointer;
+  }
+  
+  .table tr:nth-child(even) {
+    background-color: #333333;
+  }
+  
+  .table tr:nth-child(odd) {
+    background-color: #2e2e2e;
+  }
+  
+  /* Button styles for actions */
+  .btn-info, .btn-danger {
+    margin-right: 10px;
+  }
+  
+  .btn-sm {
+    padding: 5px 10px;
+  }
+  

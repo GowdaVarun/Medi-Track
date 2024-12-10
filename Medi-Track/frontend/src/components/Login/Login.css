@@ -67,13 +67,17 @@
 /* Inputs and Dropdowns */
 .form-control,
 .form-select {
-    width: 100%;
+    align-items: left;
     border-radius: 25px !important; /* Rounded rectangle */
-    padding: 12px 15px !important; /* Adjusted padding for rounded shape */
+    padding: 12px 15px !important; 
     font-size: 14px;
     border: 1px solid #ddd;
     transition: all 0.3s ease-in-out;
     box-sizing: border-box;
+    width: 100% !important; /* Match all input field widths */
+    max-width: 100%; /* Prevent overflowing */
+    margin: 0 auto; /* Center alignment */
+    display: block;
 }
 
 .form-control:focus,
