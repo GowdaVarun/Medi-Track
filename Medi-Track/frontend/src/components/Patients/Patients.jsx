@@ -158,7 +158,7 @@ const PatientsPage = () => {
     <div
       className="container-fluid p-0"
       style={{
-        background: 'linear-gradient(45deg, #654321, #3e2723)',
+        background: '#faf2e4',
         minHeight: '110vh',
         display: 'flex',
         flexDirection: 'column',
@@ -180,7 +180,7 @@ const PatientsPage = () => {
         <button className="btn btn-primary">Dashboard</button>
       </Link>
       {localStorage.getItem('role') !== 'Doctor'? (
-      <h2 className="text-center mb-3" style={{ color: 'white' }}>
+      <h2 className="text-center mb-3" style={{ color: "blue",fontSize:"55px" }}>
         Patient Records
       </h2>):(<h2></h2>)}
       {localStorage.getItem('role') === 'Admin' ? (
@@ -188,13 +188,13 @@ const PatientsPage = () => {
       <div
         className="mb-4 p-4"
         style={{
-          background: 'rgba(255, 255, 255, 0.2)',
+          background: '#ffffff',
           borderRadius: '10px',
           width: '80%',
           overflowX: 'auto',
         }}
       >
-        <h3 style={{ color: 'white', marginBottom: '20px' }}>Add Patient</h3>
+        <h3 style={{ color: "blue", marginBottom: '20px' }}>Add Patient</h3>
         {showAddPatientForm && (
           <div className="row">
             <div className="col">
@@ -273,14 +273,14 @@ const PatientsPage = () => {
       <div
       className="mb-4 p-4"
       style={{
-        background: 'rgba(255, 255, 255, 0.2)',
+        background: '#ffffff',
         borderRadius: '10px',
         width: '80%',
         overflowX: 'auto',
       }}
       >
       {console.log("Inside",patients)}
-      <h3 style={{ color: 'white', marginBottom: '20px' }}>Add Symptoms</h3>
+      <h3 style={{ color: "blue", marginBottom: '20px' }}>Add Symptoms</h3>
       {showAddPatientForm && (
         <div className="row">
           <div className="col">
@@ -350,22 +350,24 @@ const PatientsPage = () => {
       <div
         className="mb-4 p-4"
         style={{
-          background: 'rgba(255, 255, 255, 0.2)',
+          background: '#ffffff',
           borderRadius: '10px',
           width: '80%',
           overflowX: 'auto',
         }}
       >
         <div className="mb-3" style={{ display: 'flex', alignItems: 'center' }}>
-          <h3 style={{ color: 'white', marginRight: '20px' }}>Patient Entries</h3>
+          <div>
+          <h3 style={{ color: "blue" }}>Patient Entries</h3></div>
+          <div>
           <input
             type="text"
-            placeholder="Search by Name"
+            className="form-control-search"
+            placeholder="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="form-control"
-            style={{ width: '200px' }}
           />
+          </div>
         </div>
         <table className="table" style={{ color: 'white', overflowY: 'auto', maxHeight: '500px' }}>
           <thead>
@@ -480,15 +482,15 @@ const PatientsPage = () => {
                 </td>
                 <td>
                   {editablePatientId === patient._id ? (
-                    <button className="btn btn-success" onClick={() => handleSave(patient._id)}>
+                    <button className="save-button" onClick={() => handleSave(patient._id)}>
                       Save
                     </button>
                   ) : (
-                    <button className="btn btn-primary" onClick={() => handleEdit(patient._id)}>
+                    <button className="edit-button" onClick={() => handleEdit(patient._id)}>
                       Edit
                     </button>
                   )}
-                  <button className="btn btn-danger" onClick={() => handleDelete(patient._id)}>
+                  <button className="delete-button" onClick={() => handleDelete(patient._id)}>
                     Delete
                   </button>
                 </td>

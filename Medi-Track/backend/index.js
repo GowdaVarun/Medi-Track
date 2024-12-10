@@ -287,6 +287,9 @@ app.get('/mydetails', async (req, res) => {
       address: decrypt(patient[0].address),
       bloodGroup: decrypt(patient[0].bloodGroup),
       gender: decrypt(patient[0].gender),
+      height: decrypt(patient[0].height),
+      weight: decrypt(patient[0].weight),
+      dob: decrypt(patient[0].dob)
     };
     res.json(decryptedPatients);
   } catch (err) {
