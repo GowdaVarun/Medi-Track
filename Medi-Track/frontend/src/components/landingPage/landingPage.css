@@ -75,7 +75,7 @@ body {
   
   /* Hero Section */
   .hero {
-    background: linear-gradient(135deg, #3498db, #9b59b6);
+    background: linear-gradient(135deg, #3498db, #948699);
     padding: 4rem 0;
     color: white;
   }
@@ -95,13 +95,13 @@ body {
   .hero-text h2 {
     font-size: 3rem;
     margin-bottom: 1rem;
-    color: #ecf0f1;
+    color: #35869b;
     text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
   }
   
   .hero-text .tagline {
     font-size: 1.5rem;
-    color: #bdc3c7;
+    color: #fafcfd;
     margin-bottom: 1rem;
   }
   
@@ -112,7 +112,7 @@ body {
   .login{
     margin-right: 1rem;
     max-width: 150px;
-    background: #e74c3c;
+    background: #095cbb;
     color: white;
     padding: 12px 25px;
     border-radius: 30px;
@@ -121,7 +121,7 @@ body {
 
   .register{
     margin-right: 1rem;
-    background: #e74c3c;
+    background:  #095cbb;
     color: white;
     padding: 12px 25px;
     border-radius: 30px;
@@ -352,9 +352,9 @@ body {
   }
   
   .team-member img {
-    border-radius: 50%; /* Makes the images circular */
-    width: 150px;
-    height: 150px;
+     /* Makes the images circular */
+    width: 175px;
+    height: 200px;
     margin-bottom: 10px;
   }
   
