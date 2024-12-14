@@ -110,18 +110,18 @@
     transform: translateY(-1px);
 }
 
-/* Outline Buttons */
+/* Outline Buttons
 .btn-outline-primary {
     border: 1px solid #2575fc;
     color: #2575fc;
-    border-radius: 25px !important; /* Rounded button */
+    border-radius: 25px !important; 
     padding: 12px;
     font-size: 16px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
     width: 100%;
     max-width: 200px;
-}
+} */
 
 .btn-outline-primary:hover {
     background: #2575fc;
@@ -169,4 +169,28 @@
         font-size: 14px;
         padding: 10px;
     }
+}
+
+/* Smooth Transition */
+.form-transition {
+    transition: all 0.5s ease-in-out;
+    opacity: 1;
+}
+
+.form-transition.email,
+.form-transition.uniqueID {
+    transform: translateY(0);
+}
+
+.form-transition.email {
+    transform: translateX(0%);
+}
+
+.form-transition.uniqueID {
+    transform: translateX(0%);
+}
+
+.toggle-buttons button {
+    width: 45%;
+    transition: all 0.3s ease-in-out;
 }

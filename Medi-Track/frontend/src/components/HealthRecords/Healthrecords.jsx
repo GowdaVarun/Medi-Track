@@ -80,7 +80,7 @@ const MedicalRecords = () => {
       setFiles(data.files || []); // Assuming response contains { files: [...] }
     } catch (error) {
       console.error("Error fetching files:", error);
-      alert("Error fetching files. Ensure the patient name is correct.");
+      alert("Error fetching files.");
     } finally {
       setLoading(false);
     }

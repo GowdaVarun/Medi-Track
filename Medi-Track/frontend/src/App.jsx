@@ -12,7 +12,7 @@ import AppointmentBooking from './components/Appointments/Appointments';
 import MedicalDocuments from './components/MedicalDocuments/MedicalDocuments';
 import Footer from "./components/Footer/Footer"
 import FileDownloader from './components/FileManagement/FileDownloader';
-import OTPLogin from './components/otp-login/otplogin';
+// import OTPLogin from './components/otp-login/otplogin';
 
 function App() {
 
@@ -32,7 +32,7 @@ function App() {
           <Route path="/Doctors" element ={<DoctorsPage/>} />
           <Route path="/medicaldocuments" element ={<MedicalDocuments/>} />
           <Route path = "/myfiles" element={<FileDownloader />} />
-          <Route path = "/otp-login" element={<OTPLogin />} />
+          {/* <Route path = "/otp-login" element={<OTPLogin />} /> */}
         </Routes>
       </BrowserRouter>
       <Footer/>
