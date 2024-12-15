@@ -509,24 +509,52 @@ app.post('/login', loginLimiter, async (req, res) => {
     });
     
     if (user) {
-      const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+      if(password){
+        const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+        if (hashedPassword === user.password) {
+          res.json('Success');
+        } else {
+          res.status(401).json('Incorrect password');
+        }
+      } else if(password=== undefined){
+        res.json('Success');
+      } else {
+        res.status(401).json('Invalid credentials');
+      }
+    }
 
       // console.log("Hashed Password:", hashedPassword);
       // console.log("User entered password from db:", user.password);
-      if (hashedPassword === user.password) {
-        res.json('Success');
-      } else {
-        res.status(401).json('Incorrect password');
-      }
-    } else {
-      res.status(401).json('Invalid credentials');
-    }
   } catch (err) {
     console.error(err);
     res.status(500).json('An error occurred');
   }
 });
-
+app.get('/uniquePatient',async (req,res) => {
+  const {uniqueID,role} = req.query;
+  let Model;
+  if (role === 'Doctor') {
+    Model = DoctorModel;
+  } else if (role === 'Patient') {
+    Model = PatientModel;
+  } else if (role === 'Admin') {
+    Model = FormDataModel;
+  } else {
+    return res.status(400).json('Invalid role');
+  }
+  try {
+    const user = await Model.findOne({ uniqueID: uniqueID });
+    if(user){
+      res.json(user);
+    }else{
+      res.status(404).json("User with uniqueID not found");
+    }
+  }catch (err) {
+    console.error(err);
+    res.status(500).json('An error occurred');
+  }
+}
+)
 app.options('/register', (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
   res.setHeader('Access-Control-Allow-Methods', 'POST');

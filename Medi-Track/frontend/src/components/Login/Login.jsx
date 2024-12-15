@@ -30,13 +30,16 @@ const Login = () => {
 
         axios
             .post(`${backend_url}/login`, payload)
-            .then((result) => {
+            .then(async (result) => {
                 if (result.data === 'Success') {
                     localStorage.setItem('role', role);
                     if (activeForm === 'email') {
                         localStorage.setItem('email', email);
                     } else {
                         localStorage.setItem('uniqueID', uniqueID);
+                        const response = await axios.get(`${backend_url}/uniquePatient`,{params: { uniqueID, role }});
+                        // console.log(response);
+                        localStorage.setItem('email',response.data.email);
                     }
 
                     if (role === 'Admin') navigate('/home');
