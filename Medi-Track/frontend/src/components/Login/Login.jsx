@@ -159,9 +159,9 @@ const Login = () => {
                 <Link to="/register" className="btn btn-secondary w-100 mt-3">
                     Register
                 </Link>
-                <button onClick={handleOTPLogin} className="btn btn-outline-primary w-100 mt-3">
+                {/* <button onClick={handleOTPLogin} className="btn btn-outline-primary w-100 mt-3">
                     Login using OTP
-                </button>
+                </button> */}
 
                 {loginError && (
                     <div className="alert alert-danger mt-3" role="alert">

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 const containerStyle = {
-  background: 'linear-gradient(to right, #2c3e50, #4a4e4d)',
+  background:'#faf2e4',
   padding: '40px',
   borderRadius: '5px',
   display: 'flex',
@@ -14,7 +14,7 @@ const containerStyle = {
 };
 
 const headingStyle = {
-  color: 'white',
+  color: 'blue',
   fontSize: '37px',
   marginBottom: '20px',
   textAlign: 'center',
@@ -50,7 +50,7 @@ const tdHoverStyle = {
 const tdStyle = {
   padding: '15px',
   borderBottom: '1px solid #ddd',
-  color: 'white', // Updated text color to white
+  color: 'black', // Updated text color to white
 };
 
 const hoverEffect = {

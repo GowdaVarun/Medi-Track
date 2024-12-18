@@ -1,199 +1,199 @@
-/* Global styles */
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f4f4f4;
-}
+  /* Global styles */
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
 
-.appoint-background{
-  background-color: #faf2e4;
-  padding: '20px';
-  height: '100vh';
-}
-/* Form Container */
-.form-container {
-  width: 80%;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #333;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
+  .appoint-background{
+    background-color: #faf2e4;
+    padding: '20px';
+    height: '100vh';
+  }
+  /* Form Container */
+  .form-container {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
 
-/* Form row for inputs */
-.form-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 18px;
-  justify-content: center;
-}
-
-/* Input fields */
-input[type="text"] {
-  width: 200px;
-  padding: 12px;
-  margin: 5px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  background-color: #fff;
-  font-size: 16px;
-}
-
-input[type="text"]:focus {
-  border-color: #1e90ff;
-  background-color: #f9f9f9;
-}
-
-/* Submit button */
-.btn-submit {
-  background-color: #1e90ff;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.3s ease;
-}
-
-.btn-submit:hover {
-  background-color: #007acc;
-}
-
-/* Table styles */
-table {
-  width: 90%;
-  margin: 20px auto;
-  border-collapse: collapse;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-table th, table td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-  font-size: 16px;
-}
-
-table th {
-  background-color: #007bff;
-  color: white;
-}
-
-table tr:hover {
-  background-color: #f1f1f1;
-}
-
-table td {
-  background-color: #fff;
-}
-
-/* Button styles for actions */
-.btn {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 20px;
-  font-size: 16px;
-  cursor: pointer;
-  margin-right: 10px;
-  transition: background-color 0.3s ease;
-}
-
-.button-confirm{
-  background-color: #28a745;
-  color: white;
-}
-
-.button-confirm:hover {
-  background-color: #218838;
-}
-
-.button-delete{
-  background-color: #dc3545;
-  color: white;
-}
-
-.button-delete:hover {
-  background-color: #c82333;
-}
-
-.button-complete {
-  background-color: #6c757d;
-  color: white;
-}
-
-.button-complete:hover {
-  background-color: #5a6268;
-}
-
-.button-cancel {
-  background-color: #ffc107;
-  color: white;
-}
-
-.button-cancel:hover {
-  background-color: #e0a800;
-}
-
-/* Header styles */
-h1, h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: white;
-}
-
-h1 {
-  font-size: 2rem;
-}
-
-h2 {
-  font-size: 1.5rem;
-}
-
-/* Dashboard button */
-button.dashboard-btn {
-  background-color: #1e1e1e;
-  color: white;
-  padding: 12px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  border: none;
-  margin-top: 40px;
-}
-
-button.dashboard-btn:hover {
-  background-color: #444;
-}
-
-/* Responsive styles */
-@media (max-width: 768px) {
+  /* Form row for inputs */
   .form-row {
-    flex-direction: column;
-    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    justify-content: center;
   }
 
+  /* Input fields */
   input[type="text"] {
-    width: 80%;
-    margin: 5px 0;
+    width: 200px;
+    padding: 12px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    background-color: #fff;
+    font-size: 16px;
   }
 
+  input[type="text"]:focus {
+    border-color: #1e90ff;
+    background-color: #f9f9f9;
+  }
+
+  /* Submit button */
   .btn-submit {
-    width: 80%;
+    background-color: #1e90ff;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
   }
 
+  .btn-submit:hover {
+    background-color: #007acc;
+  }
+
+  /* Table styles */
   table {
-    width: 100%;
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
-}
 
-.registered-container{
-  min-height: 100vh;
-}
+  table th, table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 16px;
+  }
 
-.all-appoint-container{
-  min-height: 100vh;
-}
+  table th {
+    background-color: #007bff;
+    color: white;
+  }
+
+  table tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  table td {
+    background-color: #fff;
+  }
+
+  /* Button styles for actions */
+  .btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: background-color 0.3s ease;
+  }
+
+  .button-confirm{
+    background-color: #28a745;
+    color: white;
+  }
+
+  .button-confirm:hover {
+    background-color: #218838;
+  }
+
+  .button-delete{
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .button-delete:hover {
+    background-color: #c82333;
+  }
+
+  .button-complete {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  .button-complete:hover {
+    background-color: #5a6268;
+  }
+
+  .button-cancel {
+    background-color: #ffc107;
+    color: white;
+  }
+
+  .button-cancel:hover {
+    background-color: #e0a800;
+  }
+
+  /* Header styles */
+  h1, h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: white;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  /* Dashboard button */
+  button.dashboard-btn {
+    background-color: #1e1e1e;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    border: none;
+    margin-top: 40px;
+  }
+
+  button.dashboard-btn:hover {
+    background-color: #444;
+  }
+
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .form-row {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    input[type="text"] {
+      width: 80%;
+      margin: 5px 0;
+    }
+
+    .btn-submit {
+      width: 80%;
+    }
+
+    table {
+      width: 100%;
+    }
+  }
+
+  .registered-container{
+    min-height: 100vh;
+  }
+
+  .all-appoint-container{
+    min-height: 100vh;
+  }

@@ -1,7 +1,7 @@
 /* General Background */
 .admin-dashboard-container {
-  /* background-color: #faf2e4; */
-  background: url('/home/varun/varun/DTL/Medi-Track/Medi-Track/frontend/src/assets/loginbackground.jpeg');
+  background-color: #faf2e4;
+  /* background: url('/home/varun/varun/DTL/Medi-Track/Medi-Track/frontend/src/assets/loginbackground.jpeg'); */
   background-size: cover;  /* Light grayish-blue background */
   height: 100vh;
   display: flex;
