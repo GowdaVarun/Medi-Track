@@ -30,7 +30,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
 // Connect to MongoDB Atlas
 // console.log(process.env.MONGODB_URI);
 
@@ -123,7 +122,7 @@ app.post("/api/upload", async (req, res) => {
     }
 
     const file = req.files.file;
-    const userName = req.body.name; // Patient name
+    const userName = req.body.name.toLowerCase(); // Patient name
     const base64File = file.data.toString("base64");
 
     console.log("Uploading file for patient:", userName);

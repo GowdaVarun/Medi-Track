@@ -73,6 +73,8 @@ const MedicalRecords = () => {
     setLoading(true);
     try {
       const response = await fetch(`http://localhost:3001/api/file/${patientName}`);
+      console.log(response);
+      
       if (!response.ok) {
         throw new Error("Failed to fetch files for the patient");
       }
@@ -137,6 +139,8 @@ const MedicalRecords = () => {
 
   // Upload a new file
   const handleUpload = async () => {
+    console.log("Upload",patientName,selectedFile);
+    
     if (!patientName || !selectedFile) {
       alert("Please select a file to upload");
       return;
