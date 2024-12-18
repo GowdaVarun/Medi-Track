@@ -35,7 +35,7 @@ function App() {
           {/* <Route path = "/otp-login" element={<OTPLogin />} /> */}
         </Routes>
       </BrowserRouter>
-      <Footer/>
+      <Footer/> 
     </div>
   )
 }

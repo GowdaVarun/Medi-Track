@@ -12,11 +12,11 @@
 } */
 
 .login-background{
-    /* background-color: #faf2e4; */
-    background: url('/home/varun/varun/DTL/Medi-Track/Medi-Track/frontend/src/assets/loginbackground.jpeg');
+    background-color: #faf2e4;
+    /* background: url('/home/varun/varun/DTL/Medi-Track/Medi-Track/frontend/src/assets/bg2.jpg'); */
     background-size: cover; 
     background-position: center; 
-    height: 100vh;
+    height: 105.8vh;
     display: flex;
     justify-content: center; 
     align-items: center;     
