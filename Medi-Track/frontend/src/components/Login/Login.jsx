@@ -26,10 +26,11 @@ const Login = () => {
             payload.password = password;
         } else {
             payload.uniqueID = uniqueID;
+            
         }
-
+        
         axios
-            .post(`${backend_url}/login`, payload)
+        .post(`${backend_url}/login`, payload)
             .then(async (result) => {
                 if (result.data === 'Success') {
                     localStorage.setItem('role', role);
