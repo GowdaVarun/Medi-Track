@@ -808,7 +808,7 @@ app.get('/medical-records', async (req, res) => {
 app.put('/medical-records/:id', async (req, res) => {
   const { id } = req.params;
   const {
-    contact,
+    patientName,
     diagnosis,
     treatmentPlan,
     medications,
@@ -821,21 +821,21 @@ app.put('/medical-records/:id', async (req, res) => {
     
     const existingRecord = await MedicalRecordModel.findById(id);
     const decryptedRecord = {
-      patientId: decrypt(existingRecord.patientId),
+      patientName: decrypt(existingRecord.patientName),
       diagnosis: decrypt(existingRecord.diagnosis),
       treatmentPlan: decrypt(existingRecord.treatmentPlan),
       medications: decrypt(existingRecord.medications),
       dateOfVisit: decrypt(existingRecord.dateOfVisit),
       attendingDoctor: decrypt(existingRecord.attendingDoctor),
       labResults: decrypt(existingRecord.labResults),
-      followUpDate: decryp(existingRecord.followUpDate),
+      followUpDate: decrypt(existingRecord.followUpDate),
     };
-    const patient = await PatientModel.find({'contact': contact});
+    const patient = await PatientModel.find({'firstname': patientName});
     if(patient){
     const updatedRecord = await MedicalRecordModel.findByIdAndUpdate(
       id,
       {
-        patientId: encrypt(patientId || decryptedRecord.patientId),
+        patientName: encrypt(patientName || decryptedRecord.patientName),
         diagnosis: encrypt(diagnosis || decryptedRecord.diagnosis),
         treatmentPlan: encrypt(treatmentPlan || decryptedRecord.treatmentPlan),
         medications: encrypt(medications || decryptedRecord.medications),
