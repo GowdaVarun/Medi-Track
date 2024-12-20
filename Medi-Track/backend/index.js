@@ -168,8 +168,8 @@ app.delete("/api/file/:user/:name",async(req,res)=>{
 });
 
 const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // limit each IP to 5 requests per windowMs
+  windowMs: 60 * 60 * 1000, // 15 minutes
+  max: 50, // limit each IP to 5 requests per windowMs
   message: 'Too many login attempts from this IP, please try again later.',
   skipFailedRequests: true,
 });
@@ -490,6 +490,9 @@ app.options('/login', (req, res) => {
 
 app.post('/login', loginLimiter, async (req, res) => {
   const { email, password, role } = req.body;
+  const {uniqueID} = req.body;
+
+  console.log(uniqueID);
 
   // Choose the correct model based on the role
   let Model;
@@ -503,8 +506,9 @@ app.post('/login', loginLimiter, async (req, res) => {
     return res.status(400).json('Invalid role');
   }
   try {
+    
     const user = await Model.findOne({
-      $or: [{ email: email }, { uniqueID: email }] // Check if data1 matches either email or uniqueID
+      $or: [{ email: email }, { uniqueID: uniqueID }] // Check if data1 matches either email or uniqueID
     });
     
     if (user) {
