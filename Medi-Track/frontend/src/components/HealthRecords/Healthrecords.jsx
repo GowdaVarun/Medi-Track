@@ -484,7 +484,7 @@ const MedicalRecords = () => {
           </tr>
         </thead>
         <tbody>
-          {records.filter(record => record.patientName === patientName).map((record) => (
+          {/* {records.filter(record => record.patientName === patientName).map((record) => (
             <tr key={record._id}>
               <td>{record.patientName}</td>
               <td>{record.diagnosis}</td>
@@ -511,7 +511,39 @@ const MedicalRecords = () => {
                 </td>
               )}
             </tr>
-          ))}
+          ))} */}
+          {(localStorage.getItem('role') === 'Doctor' 
+          ? records 
+          : records.filter(record => record.patientName === patientName))
+          .map((record) => (
+            <tr key={record._id}>
+              <td>{record.patientName}</td>
+              <td>{record.diagnosis}</td>
+              <td>{record.treatmentPlan}</td>
+              <td>{record.medications}</td>
+              <td>{record.dateOfVisit}</td>
+              <td>{record.attendingDoctor}</td>
+              <td>{record.labResults}</td>
+              <td>{record.followUpDate}</td>
+              {localStorage.getItem('role') !== 'Patient' && (
+                <td>
+                  <button
+                    className="btn btn-warning"
+                    onClick={() => handleEditRecord(record)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDeleteRecord(record._id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              )}
+            </tr>
+        ))}
+
         </tbody>
       </table>)}
       {activeTable === 'table2' && activeButton === 'fetchfile' && (
