@@ -7,6 +7,7 @@ import "./HealthRecords.css"; // Import a CSS file for styling
 const MedicalRecords = () => {
   const [records, setRecords] = useState([]);
   const [formData, setFormData] = useState({
+    uniqueID: '',
     contact: '',
     diagnosis: '',
     treatmentPlan: '',
@@ -34,15 +35,26 @@ const MedicalRecords = () => {
         const role = localStorage.getItem('role');
         const email = localStorage.getItem('email');
         let result;
+        if(role === 'Doctor'){
+          localStorage.setItem('uniqueID', formData.uniqueID);
+          const uniqueID = formData.uniqueID;
+          const response = await axios.get('http://localhost:3001/uniquePatient',{params: { uniqueID, role:'Patient' }});
+          localStorage.setItem('patientemail',response.data.email);
+          const patientemail = localStorage.getItem('patientemail');
+          result = await axios.get('http://localhost:3001/mydetails', {
+            params: { patientemail: email },
+          });
+          // console.log(response);
+        }
         if (role === 'Patient') {
           result = await axios.get('http://localhost:3001/mydetails', {
             params: { patientemail: email },
           });
         }
+        setPatientName(result.data.firstname);
         setPatients(result.data);
         console.log("result.data",result.data);
         console.log("patients",patients);
-        setPatientName(result.data.firstname);
       } catch (error) {
         console.error('Error fetching patients:', error);
       }
@@ -68,7 +80,40 @@ const MedicalRecords = () => {
       isMounted = false;
     };
   }, []);
-  
+  const fetchPatient = async () => {
+    try {
+      const role = localStorage.getItem('role');
+      const email = localStorage.getItem('email');
+      let result;
+      if(role === 'Doctor'){
+        localStorage.setItem('uniqueID', formData.uniqueID);
+        
+        const uniqueID = formData.uniqueID;
+        console.log("uniqueID",formData.uniqueID);
+        const response = await axios.get('http://localhost:3001/uniquePatient',{params: { uniqueID, role:'Patient' }});
+        localStorage.setItem('patientemail',response.data.email);
+        const patientemail = localStorage.getItem('patientemail');
+        console.log(patientemail);
+        
+        result = await axios.get('http://localhost:3001/mydetails', {
+          params: { patientemail: patientemail },
+        });
+        // console.log(response);
+      }
+      if (role === 'Patient') {
+        result = await axios.get('http://localhost:3001/mydetails', {
+          params: { patientemail: email },
+        });
+      }
+      setPatientName(result.data.firstname);
+      setPatients(result.data);
+      console.log("result.data",result.data);
+      console.log("patients",patients);
+    } catch (error) {
+      console.error('Error fetching patients:', error);
+    }
+  };
+
   const fetchFiles = async () => {
     setLoading(true);
     try {
@@ -139,7 +184,42 @@ const MedicalRecords = () => {
 
   // Upload a new file
   const handleUpload = async () => {
+    var name;
     console.log("Upload",patientName,selectedFile);
+    console.log("name",formData.uniqueID);
+    
+    const fetchPatients = async () => {
+      try {
+        const role = localStorage.getItem('role');
+        const email = localStorage.getItem('email');
+        let result;
+        if(role === 'Doctor'){
+          localStorage.setItem('uniqueID', formData.uniqueID);
+          const uniqueID = formData.uniqueID;
+          const response = await axios.get('http://localhost:3001/uniquePatient',{params: { uniqueID, role:'Patient' }});
+          localStorage.setItem('patientemail',response.data.email);
+          const patientemail = localStorage.getItem('patientemail');
+          result = await axios.get('http://localhost:3001/mydetails', {
+            params: { patientemail: email },
+          });
+          // console.log(response);
+        }
+        if (role === 'Patient') {
+          result = await axios.get('http://localhost:3001/mydetails', {
+            params: { patientemail: email },
+          });
+        }
+        setPatientName(result.data.firstname);
+        name = result.data.firstname;
+        setPatients(result.data);
+        console.log("result.data",result.data);
+        console.log("patients",patients);
+      } catch (error) {
+        console.error('Error fetching patients:', error);
+      }
+    };
+    fetchPatients();
+    console.log("name here",patientName);
     
     if (!patientName || !selectedFile) {
       alert("Please select a file to upload");
@@ -196,20 +276,32 @@ const MedicalRecords = () => {
           const role = localStorage.getItem('role');
           const email = localStorage.getItem('email');
           let result;
+          if(role === 'Doctor'){
+            localStorage.setItem('uniqueID', formData.uniqueID);
+            const uniqueID = formData.uniqueID;
+            const response = await axios.get('http://localhost:3001/uniquePatient',{params: { uniqueID, role:'Patient' }});
+            localStorage.setItem('patientemail',response.data.email);
+            const patientemail = localStorage.getItem('patientemail');
+            result = await axios.get('http://localhost:3001/mydetails', {
+              params: { patientemail: email },
+            });
+            // console.log(response);
+          }
           if (role === 'Patient') {
             result = await axios.get('http://localhost:3001/mydetails', {
               params: { patientemail: email },
             });
           }
+          setPatientName(result.data.firstname);
           setPatients(result.data);
           console.log("result.data",result.data);
           console.log("patients",patients);
-          setPatientName(result.data.firstname);
         } catch (error) {
           console.error('Error fetching patients:', error);
         }
       };
       fetchPatients();
+      //fetch patients
       if (isEditMode) {
           await axios.put(
             `http://localhost:3001/medical-records/${selectedRecord._id}`,
@@ -230,6 +322,7 @@ const MedicalRecords = () => {
       setIsEditMode(false);
       setSelectedRecord(null);
       setFormData({
+        uniqueID:'',
         contact: '',
         diagnosis: '',
         treatmentPlan: '',
@@ -262,20 +355,31 @@ const MedicalRecords = () => {
         const role = localStorage.getItem('role');
         const email = localStorage.getItem('email');
         let result;
+        if(role === 'Doctor'){
+          localStorage.setItem('uniqueID', formData.uniqueID);
+          const uniqueID = formData.uniqueID;
+          const response = await axios.get('http://localhost:3001/uniquePatient',{params: { uniqueID, role:'Patient' }});
+          localStorage.setItem('patientemail',response.data.email);
+          const patientemail = localStorage.getItem('patientemail');
+          result = await axios.get('http://localhost:3001/mydetails', {
+            params: { patientemail: email },
+          });
+          // console.log(response);
+        }
         if (role === 'Patient') {
           result = await axios.get('http://localhost:3001/mydetails', {
             params: { patientemail: email },
           });
         }
+        setPatientName(result.data.firstname);
         setPatients(result.data);
         console.log("result.data",result.data);
         console.log("patients",patients);
-        setPatientName(result.data.firstname);
       } catch (error) {
         console.error('Error fetching patients:', error);
       }
-      fetchPatients();
     };
+    fetchPatients();
     setShowForm(true);
   };
 
@@ -341,8 +445,18 @@ const MedicalRecords = () => {
             <h1>
             {isEditMode ? "Edit Medical Record" : "Add New Medical Record"}
             </h1>
-          <form>
             <div className="form-group">
+              <label>Unique ID:</label>
+              <input
+                type="text"
+                value={formData.uniqueID}
+                onChange={(e) =>
+                  handleFormFieldChange("uniqueID", e.target.value)
+                }
+              />
+              <button onClick={fetchPatient} style={{ padding: "8px 16px", fontSize: "16px" }}>get patient</button>
+              </div>
+          <form>
               <label>Disease Type:</label>
               <select
                 value={diseasetype}
@@ -352,7 +466,6 @@ const MedicalRecords = () => {
                 <option value="Acute Disease">Acute Disease</option>
                 <option value="Severe Disease">Severe Disease</option>
               </select>
-            </div>
             <div className="form-group">
               <label>Diagnosis:</label>
               <select

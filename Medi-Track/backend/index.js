@@ -535,16 +535,7 @@ app.post('/login', loginLimiter, async (req, res) => {
 });
 app.get('/uniquePatient',async (req,res) => {
   const {uniqueID,role} = req.query;
-  let Model;
-  if (role === 'Doctor') {
-    Model = DoctorModel;
-  } else if (role === 'Patient') {
-    Model = PatientModel;
-  } else if (role === 'Admin') {
-    Model = FormDataModel;
-  } else {
-    return res.status(400).json('Invalid role');
-  }
+  let Model = PatientModel;
   try {
     const user = await Model.findOne({ uniqueID: uniqueID });
     if(user){
