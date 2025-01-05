@@ -211,3 +211,18 @@ h1 {
   background-color: #218838;
   transform: scale(1.05);
 }
+.get-patient{
+  margin-top: 10px;
+  padding: 12px 25px;
+  font-size: 16px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 20px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.get-patient:hover {
+  background-color: #218838;
+  transform: scale(1.05);
+}

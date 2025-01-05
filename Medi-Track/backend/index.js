@@ -865,3 +865,18 @@ const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server listening on http://127.0.0.1:${PORT}`);
 });
+
+app.get('/findUniqueID', async (req, res) => {
+  const { email } = req.query;
+  try {
+    const user = await PatientModel.findOne({ email: email });
+    if (user) {
+      res.json({ uniqueID: user.uniqueID });
+    } else {
+      res.status(404).json("User with the provided email not found");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json('An error occurred');
+  }
+});

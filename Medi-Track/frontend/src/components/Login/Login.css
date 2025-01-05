@@ -139,7 +139,7 @@
     transition: all 0.3s ease-in-out;
     width: 100%;
     cursor: pointer;
-    max-width: 150px;
+    max-width: 180px;
 }
 
 .btn-secondary:hover {

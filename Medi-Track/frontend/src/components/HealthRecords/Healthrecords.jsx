@@ -454,9 +454,10 @@ const MedicalRecords = () => {
                   handleFormFieldChange("uniqueID", e.target.value)
                 }
               />
-              <button onClick={fetchPatient} style={{ padding: "8px 16px", fontSize: "16px" }}>get patient</button>
+              <button className="get-patient"onClick={fetchPatient} style={{ padding: "8px 16px", fontSize: "16px" }}>get patient</button>
               </div>
           <form>
+            <div className="form-group">
               <label>Disease Type:</label>
               <select
                 value={diseasetype}
@@ -466,6 +467,7 @@ const MedicalRecords = () => {
                 <option value="Acute Disease">Acute Disease</option>
                 <option value="Severe Disease">Severe Disease</option>
               </select>
+              </div>
             <div className="form-group">
               <label>Diagnosis:</label>
               <select

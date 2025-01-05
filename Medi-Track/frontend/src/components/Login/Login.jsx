@@ -157,8 +157,14 @@ const Login = () => {
                 </div>
 
                 {/* OTP Login & Register */}
+                <div>
                 <Link to="/register" className="btn btn-secondary w-100 mt-3">
                     Register
+                </Link>
+
+                </div>
+                <Link to="/findmyID" className="btn btn-secondary w-100 mt-3">
+                    Find My Unique ID
                 </Link>
                 {/* <button onClick={handleOTPLogin} className="btn btn-outline-primary w-100 mt-3">
                     Login using OTP
