@@ -12,6 +12,7 @@ import AppointmentBooking from './components/Appointments/Appointments';
 import MedicalDocuments from './components/MedicalDocuments/MedicalDocuments';
 import Footer from "./components/Footer/Footer"
 import FileDownloader from './components/FileManagement/FileDownloader';
+import FindmyID from './components/findmyID/findmyID';  
 // import OTPLogin from './components/otp-login/otplogin';
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
           <Route path="/" element ={<LandingPage/>} />
           <Route path="/login" element ={<Login/>} />
           <Route path="/register" element ={<Register/>} />
+          <Route path="/findmyID" element ={<FindmyID/>} />
           <Route path="/home" element ={<Home/>} />
           <Route path="/docdash" element ={<DoctorDashboard/>} />
           <Route path="/patdash" element ={<PatientDashboard/>} />
