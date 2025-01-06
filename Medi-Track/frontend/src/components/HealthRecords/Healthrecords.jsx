@@ -430,13 +430,13 @@ const MedicalRecords = () => {
       </h1>
 
       <div className="action-buttons">
-        <button
+       {localStorage.getItem("role")==="Doctor" && <button
           className="btn btn-success"
           onClick={() => setShowForm((prevShowForm) => !prevShowForm)}
           style={{fontSize:"20px", width:"15%"}}
         >
           {showForm ? "Hide Form" : "Add Medical Record"}
-        </button>
+        </button>}
       </div>
 
       {showForm && (
@@ -581,8 +581,7 @@ const MedicalRecords = () => {
         </div>
       )}
       <button className="get-record-button" onClick={()=> setActiveTable('table')}>Get Records</button>
-      <button className="get-doc-button" onClick={() => { setActiveTable('table2'); setActiveButton('fetchfile'); }}>Get Documents</button>
-
+      {localStorage.getItem("role")==="Patient" && (<button className="get-doc-button" onClick={() => { setActiveTable('table2'); setActiveButton('fetchfile'); }}>Get Documents</button>)}
       {activeTable === 'table' && ( 
       <table className="table">
         <thead>
